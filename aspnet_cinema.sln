@@ -7,6 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Cinema", "API.Cinema\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Cinema", "Data.Cinema\Data.Cinema.csproj", "{3825FB83-0CBD-493B-9B90-9AE77CCB9309}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{D2225E93-B6A0-48B6-80B9-7070B5C158A9}"
+	ProjectSection(SolutionItems) = preProject
+		doc\step-by-step-tutorial.md = doc\step-by-step-tutorial.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D2F5776-A652-4386-91AD-EBE909C63DF8}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
