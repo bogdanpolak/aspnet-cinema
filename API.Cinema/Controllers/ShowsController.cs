@@ -32,6 +32,9 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<Showtime>> GetShowtime(string id)
         {
             var showtime = await _context.Showtimes.FindAsync(id);
+            await _context.Entry(showtime)
+               .Collection(st => st.Tickets)
+               .LoadAsync();
 
             if (showtime == null)
             {
