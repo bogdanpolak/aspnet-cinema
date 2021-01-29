@@ -32,20 +32,26 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<Object>> GetShowtime(string id)
         {
             var show = await _context.Showtimes.FindAsync(id);
-            var tickts = show.Tickets;
-
-            if (show == null)
+            if (show == null) return NotFound();
+            var response = new
             {
-                return NotFound();
-            }
-            return new
-            {
-                showid = show.Showid,
-                movieid = show.Movieid,
-                roomid = show.Roomid,
+                showid = id,
+                movie = show.Movie.Title,
+                roomid = show.Room.Name,
                 start = show.Start,
-                tickets = tickts.Count
+                tickets = show.Tickets.Aggregate<Ticket, List<Object>>(
+                    new List<Object>(),
+                    (acc, t) => {
+                        acc.Add(new
+                        {
+                            row = t.Rownum,
+                            seat = t.Seatnum,
+                            price = t.Price
+                        });
+                        return acc;
+                    })
             };
+            return response;
         }
 
         // PUT: api/Show/5
