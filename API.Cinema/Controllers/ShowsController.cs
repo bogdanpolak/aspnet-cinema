@@ -29,19 +29,23 @@ namespace API.Cinema.Controllers
 
         // GET: api/Show/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Showtime>> GetShowtime(string id)
+        public async Task<ActionResult<Object>> GetShowtime(string id)
         {
-            var showtime = await _context.Showtimes.FindAsync(id);
-            await _context.Entry(showtime)
-               .Collection(st => st.Tickets)
-               .LoadAsync();
+            var show = await _context.Showtimes.FindAsync(id);
+            var tickts = show.Tickets;
 
-            if (showtime == null)
+            if (show == null)
             {
                 return NotFound();
             }
-
-            return showtime;
+            return new
+            {
+                showid = show.Showid,
+                movieid = show.Movieid,
+                roomid = show.Roomid,
+                start = show.Start,
+                tickets = tickts.Count
+            };
         }
 
         // PUT: api/Show/5

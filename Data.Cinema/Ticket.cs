@@ -14,7 +14,6 @@ namespace Data.Cinema
         public int Seatnum { get; set; }
         public decimal Price { get; set; }
 
-        [JsonIgnore]
         public virtual Showtime Show { get; set; }
     }
 }
