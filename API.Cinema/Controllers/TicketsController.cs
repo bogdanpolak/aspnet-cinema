@@ -10,11 +10,11 @@ namespace API.Cinema.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TicketController : ControllerBase
+    public class TicketsController : ControllerBase
     {
         private readonly CinemaContext _context;
 
-        public TicketController(CinemaContext context)
+        public TicketsController(CinemaContext context)
         {
             _context = context;
         }
