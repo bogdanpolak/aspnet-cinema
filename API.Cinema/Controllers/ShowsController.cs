@@ -9,7 +9,7 @@ using Data.Cinema;
 
 namespace API.Cinema.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ShowsController : ControllerBase
     {
@@ -20,16 +20,48 @@ namespace API.Cinema.Controllers
             _context = context;
         }
 
+        public class GetShowsAsyncDto
+        {
+            public String id { get; set; }
+            public String movie { get; set; }
+            public String room { get; set; }
+            public String date { get; set; }
+            public String time { get; set; }
+            public int sold { get; set; }
+            public int seats { get; set; }
+        }
+
         // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Showtime>>> GetShowtimes()
+        public async Task<ActionResult<IEnumerable<GetShowsAsyncDto>>>
+            GetShowsAsync()
         {
-            return await _context.Showtimes.ToListAsync();
+            var shows = await _context.Showtimes.ToListAsync();
+            var response = shows.Aggregate<Showtime, List<GetShowsAsyncDto>>(
+                new List<GetShowsAsyncDto>(),
+                (acc,show) =>
+                {
+                    acc.Add(new GetShowsAsyncDto
+                    {
+                        id = show.Showid,
+                        movie = show.Movie.Title,
+                        room = show.Room.Name,
+                        date = show.Start.ToString("yyyy-MM-dd"),
+                        time = show.Start.ToString("HH:mm"),
+                        sold = show.Tickets.Count(),
+                        seats = show.Room.Rows * show.Room.Columns
+                    });
+                    return acc;
+                })
+                .OrderBy( r => r.date )
+                .ThenBy(r => r.time)
+                .ToList();
+            return response;
         }
 
         // GET: api/Show/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Object>> GetShowtime(string id)
+        public async Task<ActionResult<Object>> GetShowAsync(string id)
         {
             var show = await _context.Showtimes.FindAsync(id);
             if (show == null) return NotFound();
