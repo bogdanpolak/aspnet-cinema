@@ -19,10 +19,18 @@ namespace API.Cinema.Controllers
             _context = context;
         }
 
-        [HttpGet("{showName}")]
-        public ActionResult<IEnumerable<Ticket>> GetTicket(string showName)
+        [HttpGet]
+        public async Task<ActionResult<Object>> GetTicketsAsync()
         {
-            return _context.Tickets.Where(t => t.Showid == showName).ToList();
+            var tickets = _context.Tickets
+                .CountAsync();
+            var sum = _context.Tickets
+                .SumAsync(t => t.Price);
+            return new
+            {
+                tickets = await tickets,
+                sum = await sum
+            };
         }
 
     }
