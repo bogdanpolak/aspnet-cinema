@@ -33,18 +33,19 @@ namespace API.Cinema.Controllers
                 {
                     acc.Add(new GetShowsResponseDto
                     {
-                        id = show.Showid,
-                        movie = show.Movie.Title,
-                        room = show.Room.Name,
-                        date = show.Start.ToString("yyyy-MM-dd"),
-                        time = show.Start.ToString("HH:mm"),
-                        sold = show.Tickets.Count(),
-                        seats = show.Room.Rows * show.Room.Columns
+                        Id = show.Showid,
+                        Movie = show.Movie.Title,
+                        Room = show.Room.Name,
+                        Date = show.Start.ToString("yyyy-MM-dd"),
+                        Time = show.Start.ToString("HH:mm"),
+                        PercentSold = Math.Round(show.Tickets.Count() /
+                            (decimal)show.Room.Rows / show.Room.Columns
+                            * 100, 1)
                     });
                     return acc;
                 })
-                .OrderBy( r => r.date )
-                .ThenBy(r => r.time)
+                .OrderBy( r => r.Date )
+                .ThenBy(r => r.Time)
                 .ToList();
             return response;
         }
