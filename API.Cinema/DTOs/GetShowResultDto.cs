@@ -4,13 +4,26 @@ namespace API.Cinema.DTOs
 {
     public class GetShowResultDto
     {
-        public string Showid { get; set; }
-        public int MovieId { get; set; }
-        public int RoomId { get; set; }
-        public DateTime Start { get; set; }
-        public int Seats { get; set; }
-        public int SoldSeats { get; set; }
-        public decimal Total { get; set; }
+        public string Showid { get; }
+        public int MovieId { get; }
+        public int RoomId { get; }
+        public DateTime Start { get; }
+        public int Seats { get; }
+        public int SoldSeats { get; }
+        public decimal Total { get; }
+
+
+        public GetShowResultDto(string showid, int movieId, int roomId,
+            DateTime start, int seats, int soldSeats, decimal total)
+        {
+            Showid = showid;
+            MovieId = movieId;
+            RoomId = roomId;
+            Start = start;
+            Seats = seats;
+            SoldSeats = soldSeats;
+            Total = total;
+        }
 
         public override bool Equals(object obj)
         {

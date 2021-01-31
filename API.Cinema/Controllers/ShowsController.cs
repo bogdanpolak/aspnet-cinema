@@ -32,23 +32,21 @@ namespace API.Cinema.Controllers
                     new List<GetShowsResultDto.Show>(),
                     (acc, show) =>
                     {
-                        acc.Add(new GetShowsResultDto.Show
-                        {
-                            Id = show.Showid,
-                            Movie = show.Movie.Title,
-                            Room = show.Room.Name,
-                            Date = show.Start.ToString("yyyy-MM-dd"),
-                            Time = show.Start.ToString("HH:mm"),
-                            PercentSold = Math.Round(show.Tickets.Count() /
-                                (decimal)show.Room.Rows / show.Room.Columns
-                                * 100, 1)
-                        });
+                        var percentSold = Math.Round(
+                            show.Tickets.Count() / (decimal)show.Room.Rows
+                            / show.Room.Columns * 100, 1);
+                        var startDay = show.Start.ToString("yyyy-MM-dd");
+                        var startTime = show.Start.ToString("HH:mm");
+                        acc.Add(new GetShowsResultDto.Show(
+                            show.Showid, show.Movie.Title, show.Room.Name,
+                            startDay, startTime, percentSold));
                         return acc;
                     })
                 .OrderBy(r => r.Date)
                 .ThenBy(r => r.Time)
                 .ToList();
-            return GetShowsResultDto.Create(shows);
+            var result = new GetShowsResultDto(shows);
+            return result;
         }
 
 
@@ -59,15 +57,16 @@ namespace API.Cinema.Controllers
         {
             var show = await _context.Showtimes.FindAsync(id);
             if (show == null) return NotFound();
-            return new GetShowResultDto {
-                Showid = id,
-                MovieId = show.Movieid,
-                RoomId = show.Roomid,
-                Start = show.Start,
-                Seats = show.Room.Rows * show.Room.Columns,
-                SoldSeats = show.Tickets.Count(),
-                Total = show.Tickets.Sum(t => t.Price)
-            };
+            var result = new GetShowResultDto (
+                showid: id,
+                movieId: show.Movieid,
+                roomId: show.Roomid,
+                start: show.Start,
+                seats: show.Room.Rows * show.Room.Columns,
+                soldSeats: show.Tickets.Count(),
+                total: show.Tickets.Sum(t => t.Price)
+            );
+            return result;
         }
 
         // PUT: api/Show/5
