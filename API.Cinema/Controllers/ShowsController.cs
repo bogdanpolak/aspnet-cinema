@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Data.Cinema;
+using API.Cinema.DTOs;
 
 namespace API.Cinema.Controllers
 {
@@ -20,28 +21,17 @@ namespace API.Cinema.Controllers
             _context = context;
         }
 
-        public class GetShowsAsyncDto
-        {
-            public String id { get; set; }
-            public String movie { get; set; }
-            public String room { get; set; }
-            public String date { get; set; }
-            public String time { get; set; }
-            public int sold { get; set; }
-            public int seats { get; set; }
-        }
-
         // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetShowsAsyncDto>>>
+        public async Task<ActionResult<IEnumerable<GetShowsResponseDto>>>
             GetShowsAsync()
         {
             var shows = await _context.Showtimes.ToListAsync();
-            var response = shows.Aggregate<Showtime, List<GetShowsAsyncDto>>(
-                new List<GetShowsAsyncDto>(),
+            var response = shows.Aggregate<Showtime, List<GetShowsResponseDto>>(
+                new List<GetShowsResponseDto>(),
                 (acc,show) =>
                 {
-                    acc.Add(new GetShowsAsyncDto
+                    acc.Add(new GetShowsResponseDto
                     {
                         id = show.Showid,
                         movie = show.Movie.Title,
