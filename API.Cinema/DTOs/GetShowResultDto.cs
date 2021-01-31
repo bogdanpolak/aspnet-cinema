@@ -2,7 +2,7 @@
 
 namespace API.Cinema.DTOs
 {
-    public class GetShowResponseDto
+    public class GetShowResultDto
     {
         public string Showid { get; set; }
         public int MovieId { get; set; }
@@ -14,7 +14,7 @@ namespace API.Cinema.DTOs
 
         public override bool Equals(object obj)
         {
-            return obj is GetShowResponseDto other &&
+            return obj is GetShowResultDto other &&
                    Showid == other.Showid &&
                    MovieId == other.MovieId &&
                    RoomId == other.RoomId &&

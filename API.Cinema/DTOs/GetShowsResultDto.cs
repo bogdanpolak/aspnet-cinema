@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace API.Cinema.DTOs
 {
-    public class GetShowsResponseDto
+    public class GetShowsResultDto
     {
         public class Show
         {
@@ -16,7 +16,7 @@ namespace API.Cinema.DTOs
         }
         public List<Show> Shows { get; set; }
 
-        public static GetShowsResponseDto Create (List<Show> shows) =>
-            new GetShowsResponseDto { Shows = shows };
+        public static GetShowsResultDto Create (List<Show> shows) =>
+            new GetShowsResultDto { Shows = shows };
     }
 }

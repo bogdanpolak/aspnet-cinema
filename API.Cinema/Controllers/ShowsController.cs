@@ -23,16 +23,16 @@ namespace API.Cinema.Controllers
 
         // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<GetShowsResponseDto>>
+        public async Task<ActionResult<GetShowsResultDto>>
             GetShowsAsync()
         {
             var showsInDataBase = await _context.Showtimes.ToListAsync();
             var shows = showsInDataBase
                 .Aggregate(
-                    new List<GetShowsResponseDto.Show>(),
+                    new List<GetShowsResultDto.Show>(),
                     (acc, show) =>
                     {
-                        acc.Add(new GetShowsResponseDto.Show
+                        acc.Add(new GetShowsResultDto.Show
                         {
                             Id = show.Showid,
                             Movie = show.Movie.Title,
@@ -48,18 +48,18 @@ namespace API.Cinema.Controllers
                 .OrderBy(r => r.Date)
                 .ThenBy(r => r.Time)
                 .ToList();
-            return GetShowsResponseDto.Create(shows);
+            return GetShowsResultDto.Create(shows);
         }
 
 
         // GET: api/Show/{show-id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetShowResponseDto>>
+        public async Task<ActionResult<GetShowResultDto>>
             GetShowAsync(string id)
         {
             var show = await _context.Showtimes.FindAsync(id);
             if (show == null) return NotFound();
-            return new GetShowResponseDto {
+            return new GetShowResultDto {
                 Showid = id,
                 MovieId = show.Movieid,
                 RoomId = show.Roomid,
