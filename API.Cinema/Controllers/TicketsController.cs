@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Data.Cinema;
 using Microsoft.EntityFrameworkCore;
+using API.Cinema.DTOs;
 
 namespace API.Cinema.Controllers
 {
@@ -20,17 +21,14 @@ namespace API.Cinema.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Object>> GetTicketsAsync()
+        public async Task<ActionResult<GetTicketsResultDto>>
+            GetTicketsAsync()
         {
-            var tickets = _context.Tickets
-                .CountAsync();
-            var sum = _context.Tickets
-                .SumAsync(t => t.Price);
-            return new
-            {
-                tickets = await tickets,
-                sum = await sum
+            var tickets = new GetTicketsResultDto {
+                Tickets = await _context.Tickets.CountAsync(),
+                Sum = await _context.Tickets.SumAsync(t => t.Price)
             };
+            return tickets;
         }
 
         [HttpGet("{showName}")]
