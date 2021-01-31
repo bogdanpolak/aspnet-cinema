@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Data.Cinema;
 using Microsoft.EntityFrameworkCore;
+using API.Cinema.DTOs;
 
 namespace API.Cinema.Controllers
 {
@@ -20,54 +21,53 @@ namespace API.Cinema.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Object>> GetTicketsAsync()
+        public async Task<ActionResult<GetTicketsResultDto>>
+            GetTicketsAsync()
         {
-            var tickets = _context.Tickets
-                .CountAsync();
-            var sum = _context.Tickets
-                .SumAsync(t => t.Price);
-            return new
-            {
-                tickets = await tickets,
-                sum = await sum
+            var tickets = new GetTicketsResultDto {
+                Tickets = await _context.Tickets.CountAsync(),
+                Sum = await _context.Tickets.SumAsync(t => t.Price)
             };
+            return tickets;
         }
 
         [HttpGet("{showName}")]
-        public async Task<ActionResult<Object>> GetShowTicketsAsync(
-            string showName)
+        public async Task<ActionResult<GetTicketsForShowResultDto>>
+            GetTicketsForShowAsync(string showName)
         {
             var show = await _context.Showtimes.FindAsync(showName);
-            var showTickets = await _context.Tickets
-                .Where(t => t.Showid == showName)
-                .ToListAsync();
-            var movie = await _context.Movies.FindAsync(show.Movieid);
-            var room = await _context.Rooms.FindAsync(show.Roomid);
-            var distinctRows = showTickets
-                .Select(t=>t.Rownum)
-                .Distinct()
-                .OrderBy(i => i);
-            var tickets = distinctRows.Aggregate<int, List<Object>>(
-                new List<Object>(),
-                (acc,rowNum) => {
-                    var seats = showTickets
-                        .Where(t => t.Rownum == rowNum)
-                        .Select(t => t.Seatnum)
-                        .OrderBy(i => i);
-                    acc.Add( new {
-                        row = rowNum,
-                        seats
-                    });
-                    return acc;
-                });
-            return new
-            {
-                show = movie.Title,
-                room = room.Name,
-                schedule = show.Start,
-                tickets
-            };
+            var result = new GetTicketsForShowResultDto(
+                show.Movie.Title,
+                show.Room.Name,
+                show.Start,
+                BuildTicketsForShow(show.Tickets.ToList())
+            );
+            return result;
         }
 
+        private static List<GetTicketsForShowResultDto.RowSeats>
+            BuildTicketsForShow(IList<Ticket> showTickets)
+        {
+            var distinctRows = showTickets
+                .Select(t => t.Rownum)
+                .Distinct()
+                .OrderBy(i => i);
+            var tickets = distinctRows.Aggregate(
+                new List<GetTicketsForShowResultDto.RowSeats>(),
+                (acc, rowNum) =>
+                {
+                    acc.Add(new GetTicketsForShowResultDto.RowSeats(
+                        rowNum,
+                        showTickets
+                        .Where(t => t.Rownum == rowNum)
+                        .Select(t => t.Seatnum)
+                        .OrderBy(i => i)
+                        .ToList()
+                    ));
+                    return acc;
+                });
+            return tickets;
+        }
     }
+
 }

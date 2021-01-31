@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Data.Cinema;
+using API.Cinema.DTOs;
 
 namespace API.Cinema.Controllers
 {
@@ -20,75 +21,58 @@ namespace API.Cinema.Controllers
             _context = context;
         }
 
-        public class GetShowsAsyncDto
-        {
-            public String id { get; set; }
-            public String movie { get; set; }
-            public String room { get; set; }
-            public String date { get; set; }
-            public String time { get; set; }
-            public int sold { get; set; }
-            public int seats { get; set; }
-        }
-
         // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetShowsAsyncDto>>>
+        public async Task<ActionResult<GetShowsResultDto>>
             GetShowsAsync()
         {
-            var shows = await _context.Showtimes.ToListAsync();
-            var response = shows.Aggregate<Showtime, List<GetShowsAsyncDto>>(
-                new List<GetShowsAsyncDto>(),
-                (acc,show) =>
-                {
-                    acc.Add(new GetShowsAsyncDto
+            var showsInDataBase = await _context.Showtimes.ToListAsync();
+            var shows = showsInDataBase
+                .Aggregate(
+                    new List<GetShowsResultDto.Show>(),
+                    (acc, show) =>
                     {
-                        id = show.Showid,
-                        movie = show.Movie.Title,
-                        room = show.Room.Name,
-                        date = show.Start.ToString("yyyy-MM-dd"),
-                        time = show.Start.ToString("HH:mm"),
-                        sold = show.Tickets.Count(),
-                        seats = show.Room.Rows * show.Room.Columns
-                    });
-                    return acc;
-                })
-                .OrderBy( r => r.date )
-                .ThenBy(r => r.time)
+                        var percentSold = Math.Round(
+                            show.Tickets.Count() / (decimal)show.Room.Rows
+                            / show.Room.Columns * 100, 1);
+                        var startDay = show.Start.ToString("yyyy-MM-dd");
+                        var startTime = show.Start.ToString("HH:mm");
+                        acc.Add(new GetShowsResultDto.Show(
+                            show.Showid, show.Movie.Title, show.Room.Name,
+                            startDay, startTime, percentSold));
+                        return acc;
+                    })
+                .OrderBy(r => r.Date)
+                .ThenBy(r => r.Time)
                 .ToList();
-            return response;
+            var result = new GetShowsResultDto(shows);
+            return result;
         }
 
-        // GET: api/Show/5
+
+        // GET: api/Show/{show-id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Object>> GetShowAsync(string id)
+        public async Task<ActionResult<GetShowResultDto>>
+            GetShowAsync(string id)
         {
             var show = await _context.Showtimes.FindAsync(id);
             if (show == null) return NotFound();
-            var response = new
-            {
-                showid = id,
-                movie = show.Movie.Title,
-                roomid = show.Room.Name,
-                start = show.Start,
-                tickets = show.Tickets.Aggregate<Ticket, List<Object>>(
-                    new List<Object>(),
-                    (acc, t) => {
-                        acc.Add(new
-                        {
-                            row = t.Rownum,
-                            seat = t.Seatnum,
-                            price = t.Price
-                        });
-                        return acc;
-                    })
-            };
-            return response;
+            var result = new GetShowResultDto (
+                showid: id,
+                movieId: show.Movieid,
+                roomId: show.Roomid,
+                start: show.Start,
+                seats: show.Room.Rows * show.Room.Columns,
+                soldSeats: show.Tickets.Count(),
+                total: show.Tickets.Sum(t => t.Price)
+            );
+            return result;
         }
 
         // PUT: api/Show/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, enable the specific 
+        // properties you want to bind to, for more details, see
+        //  https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShowtime(string id, Showtime showtime)
         {
@@ -119,8 +103,9 @@ namespace API.Cinema.Controllers
         }
 
         // POST: api/Show
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, enable the specific
+        // properties you want to bind to, for more details, see
+        // https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Showtime>> PostShowtime(Showtime showtime)
         {
