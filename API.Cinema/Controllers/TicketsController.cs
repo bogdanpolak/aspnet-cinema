@@ -32,15 +32,16 @@ namespace API.Cinema.Controllers
         }
 
         [HttpGet("{showName}")]
-        public async Task<ActionResult<Object>> GetShowTicketsAsync(
+        public async Task<ActionResult<GetTicketsForShowResultDto>>
+            GetTicketsForShowAsync(
             string showName)
         {
             var show = await _context.Showtimes.FindAsync(showName);
+            var movie = await _context.Movies.FindAsync(show.Movieid);
+            var room = await _context.Rooms.FindAsync(show.Roomid);
             var showTickets = await _context.Tickets
                 .Where(t => t.Showid == showName)
                 .ToListAsync();
-            var movie = await _context.Movies.FindAsync(show.Movieid);
-            var room = await _context.Rooms.FindAsync(show.Roomid);
             var distinctRows = showTickets
                 .Select(t=>t.Rownum)
                 .Distinct()
@@ -58,13 +59,9 @@ namespace API.Cinema.Controllers
                     });
                     return acc;
                 });
-            return new
-            {
-                show = movie.Title,
-                room = room.Name,
-                schedule = show.Start,
-                tickets
-            };
+            var result = new GetTicketsForShowResultDto(movie.Title,
+                room.Name, show.Start, tickets);
+            return result;
         }
 
     }
