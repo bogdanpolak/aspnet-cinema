@@ -23,31 +23,32 @@ namespace API.Cinema.Controllers
 
         // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetShowsResponseDto>>>
+        public async Task<ActionResult<GetShowsResponseDto>>
             GetShowsAsync()
         {
-            var shows = await _context.Showtimes.ToListAsync();
-            var response = shows.Aggregate<Showtime, List<GetShowsResponseDto>>(
-                new List<GetShowsResponseDto>(),
-                (acc,show) =>
-                {
-                    acc.Add(new GetShowsResponseDto
+            var showsInDataBase = await _context.Showtimes.ToListAsync();
+            var shows = showsInDataBase
+                .Aggregate(
+                    new List<GetShowsResponseDto.Show>(),
+                    (acc, show) =>
                     {
-                        Id = show.Showid,
-                        Movie = show.Movie.Title,
-                        Room = show.Room.Name,
-                        Date = show.Start.ToString("yyyy-MM-dd"),
-                        Time = show.Start.ToString("HH:mm"),
-                        PercentSold = Math.Round(show.Tickets.Count() /
-                            (decimal)show.Room.Rows / show.Room.Columns
-                            * 100, 1)
-                    });
-                    return acc;
-                })
-                .OrderBy( r => r.Date )
+                        acc.Add(new GetShowsResponseDto.Show
+                        {
+                            Id = show.Showid,
+                            Movie = show.Movie.Title,
+                            Room = show.Room.Name,
+                            Date = show.Start.ToString("yyyy-MM-dd"),
+                            Time = show.Start.ToString("HH:mm"),
+                            PercentSold = Math.Round(show.Tickets.Count() /
+                                (decimal)show.Room.Rows / show.Room.Columns
+                                * 100, 1)
+                        });
+                        return acc;
+                    })
+                .OrderBy(r => r.Date)
                 .ThenBy(r => r.Time)
                 .ToList();
-            return response;
+            return GetShowsResponseDto.Create(shows);
         }
 
         // GET: api/Show/5
