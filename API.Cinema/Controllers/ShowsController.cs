@@ -51,36 +51,29 @@ namespace API.Cinema.Controllers
             return GetShowsResponseDto.Create(shows);
         }
 
-        // GET: api/Show/5
+
+        // GET: api/Show/{show-id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Object>> GetShowAsync(string id)
+        public async Task<ActionResult<GetShowResponseDto>>
+            GetShowAsync(string id)
         {
             var show = await _context.Showtimes.FindAsync(id);
             if (show == null) return NotFound();
-            var response = new
-            {
-                showid = id,
-                movie = show.Movie.Title,
-                roomid = show.Room.Name,
-                start = show.Start,
-                tickets = show.Tickets.Aggregate<Ticket, List<Object>>(
-                    new List<Object>(),
-                    (acc, t) => {
-                        acc.Add(new
-                        {
-                            row = t.Rownum,
-                            seat = t.Seatnum,
-                            price = t.Price
-                        });
-                        return acc;
-                    })
+            return new GetShowResponseDto {
+                Showid = id,
+                MovieId = show.Movieid,
+                RoomId = show.Roomid,
+                Start = show.Start,
+                Seats = show.Room.Rows * show.Room.Columns,
+                SoldSeats = show.Tickets.Count(),
+                Total = show.Tickets.Sum(t => t.Price)
             };
-            return response;
         }
 
         // PUT: api/Show/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, enable the specific 
+        // properties you want to bind to, for more details, see
+        //  https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShowtime(string id, Showtime showtime)
         {
@@ -111,8 +104,9 @@ namespace API.Cinema.Controllers
         }
 
         // POST: api/Show
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // To protect from overposting attacks, enable the specific
+        // properties you want to bind to, for more details, see
+        // https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Showtime>> PostShowtime(Showtime showtime)
         {
