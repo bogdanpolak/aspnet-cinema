@@ -68,6 +68,46 @@ namespace API.Cinema.Controllers
                 });
             return tickets;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Object>>
+            PostTicketAsync([FromBody] PostTicketsRequest request)
+        {
+            var ticket = new Ticket()
+            {
+                Showid = request.ShowId,
+                Rownum = request.RowNum,
+                Seatnum = request.SeatNum,
+                Price = request.Price
+            };
+            _context.Tickets.Add(ticket);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (TicketExists(request.ShowId, request.RowNum, request.SeatNum))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("PostTicket",
+                new { id = ticket.Ticketid },
+                ticket);
+        }
+
+        private bool TicketExists(string id, int row, int seat)
+            => _context.Tickets
+                .Any(e => e.Showid == id &&
+                    e.Rownum == row &&
+                    e.Seatnum == seat);
+
     }
 
 }
