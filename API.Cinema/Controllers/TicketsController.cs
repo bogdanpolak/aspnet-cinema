@@ -73,6 +73,14 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<Object>>
             PostTicketAsync([FromBody] PostTicketsRequest request)
         {
+            var isBooked = _context.Tickets.Any(t =>
+                t.Showid == request.ShowKey &&
+                t.Rownum == request.RowNum &&
+                t.Seatnum == request.SeatNum);
+
+            if (isBooked)
+                return BadRequest("Ticket for the show and for a seat already booked");
+
             var ticket = new Ticket()
             {
                 Showid = request.ShowKey,
