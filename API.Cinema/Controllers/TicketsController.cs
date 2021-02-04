@@ -75,7 +75,7 @@ namespace API.Cinema.Controllers
         {
             var ticket = new Ticket()
             {
-                Showid = request.ShowId,
+                Showid = request.ShowKey,
                 Rownum = request.RowNum,
                 Seatnum = request.SeatNum,
                 Price = request.Price
@@ -87,7 +87,7 @@ namespace API.Cinema.Controllers
             }
             catch (DbUpdateException)
             {
-                if (TicketExists(request.ShowId, request.RowNum, request.SeatNum))
+                if (TicketExists(request.ShowKey, request.RowNum, request.SeatNum))
                 {
                     return Conflict();
                 }

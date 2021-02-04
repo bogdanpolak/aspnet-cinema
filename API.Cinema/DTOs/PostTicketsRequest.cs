@@ -4,7 +4,7 @@ namespace API.Cinema.DTOs
 {
     public class PostTicketsRequest
     {
-        public string ShowId { get; set; }
+        public string ShowKey { get; set; }
         public int RowNum { get; set; }
         public int SeatNum { get; set; }
         public decimal Price { get; set; }
@@ -15,12 +15,12 @@ namespace API.Cinema.DTOs
 
         public override bool Equals(object obj)
             => obj is PostTicketsRequest request &&
-                ShowId == request.ShowId &&
+                ShowKey == request.ShowKey &&
                 RowNum == request.RowNum &&
                 SeatNum == request.SeatNum &&
                 Price == request.Price;
 
         public override int GetHashCode()
-            => HashCode.Combine(ShowId, RowNum, SeatNum, Price);
+            => HashCode.Combine(ShowKey, RowNum, SeatNum, Price);
     }
 }
