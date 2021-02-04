@@ -68,6 +68,54 @@ namespace API.Cinema.Controllers
                 });
             return tickets;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Object>>
+            PostTicketAsync([FromBody] PostTicketsRequest request)
+        {
+            var isBooked = _context.Tickets.Any(t =>
+                t.Showid == request.ShowKey &&
+                t.Rownum == request.RowNum &&
+                t.Seatnum == request.SeatNum);
+
+            if (isBooked)
+                return BadRequest("Ticket for the show and for a seat already booked");
+
+            var ticket = new Ticket()
+            {
+                Showid = request.ShowKey,
+                Rownum = request.RowNum,
+                Seatnum = request.SeatNum,
+                Price = request.Price
+            };
+            _context.Tickets.Add(ticket);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (TicketExists(request.ShowKey, request.RowNum, request.SeatNum))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("PostTicket",
+                new { id = ticket.Ticketid },
+                ticket);
+        }
+
+        private bool TicketExists(string id, int row, int seat)
+            => _context.Tickets
+                .Any(e => e.Showid == id &&
+                    e.Rownum == row &&
+                    e.Seatnum == seat);
+
     }
 
 }
