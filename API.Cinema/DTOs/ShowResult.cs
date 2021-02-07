@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace API.Cinema.DTOs
 {
-    public class GetShowsResultDto
+    public class ShowResult
     {
         public String ShowId { get; set; }
         public String Movie { get; set; }
