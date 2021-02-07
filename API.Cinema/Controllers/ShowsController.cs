@@ -70,6 +70,46 @@ namespace API.Cinema.Controllers
             return result;
         }
 
+
+        [HttpGet("{showName}/tickets")]
+        public async Task<ActionResult<GetTicketsForShowResultDto>>
+            GetTicketsForShowAsync(string showName)
+        {
+            var show = await _context.Showtimes.FindAsync(showName);
+            var result = new GetTicketsForShowResultDto(
+                show.Movie.Title,
+                show.Room.Name,
+                show.Start,
+                BuildTicketsForShow(show.Tickets.ToList())
+            );
+            return result;
+        }
+
+        private static List<GetTicketsForShowResultDto.RowSeats>
+            BuildTicketsForShow(IList<Ticket> showTickets)
+        {
+            var distinctRows = showTickets
+                .Select(t => t.Rownum)
+                .Distinct()
+                .OrderBy(i => i);
+            var tickets = distinctRows.Aggregate(
+                new List<GetTicketsForShowResultDto.RowSeats>(),
+                (acc, rowNum) =>
+                {
+                    acc.Add(new GetTicketsForShowResultDto.RowSeats(
+                        rowNum,
+                        showTickets
+                        .Where(t => t.Rownum == rowNum)
+                        .Select(t => t.Seatnum)
+                        .OrderBy(i => i)
+                        .ToList()
+                    ));
+                    return acc;
+                });
+            return tickets;
+        }
+
+
         // PUT: api/Show/5
         // To protect from overposting attacks, enable the specific 
         // properties you want to bind to, for more details, see
