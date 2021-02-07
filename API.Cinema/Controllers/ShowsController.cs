@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Data.Cinema;
 using API.Cinema.DTOs;
+using Data.Cinema.Entites;
 
 namespace API.Cinema.Controllers
 {

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 #nullable disable
 
-namespace Data.Cinema
+namespace Data.Cinema.Entites
 {
     public partial class Ticket
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Data.Cinema.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
