@@ -29,7 +29,8 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<GetShowsResultDto[]>> GetAsync()
         {
             return new List<ShowData>(await showRepository.GetAll())
-                .Select(show => new GetShowsResultDto {
+                .Select(show => new GetShowsResultDto
+                {
                     ShowId = show.Showid,
                     Movie = show.Movie,
                     Room = show.Room,
@@ -42,23 +43,18 @@ namespace API.Cinema.Controllers
         }
 
 
-        // GET: api/Show/{show-id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GetShowResultDto>>
-            GetShowAsync(string id)
+        [HttpGet("{showId}")]
+        public async Task<ActionResult<ShowOneResult>> GetShowOne(string showId)
         {
-            var show = await _context.Showtimes.FindAsync(id);
+            var show = await _context.Showtimes.FindAsync(showId);
             if (show == null) return NotFound();
-            var result = new GetShowResultDto (
-                showid: id,
-                movieId: show.Movieid,
-                roomId: show.Roomid,
-                start: show.Start,
-                seats: show.Room.Rows * show.Room.Columns,
-                soldSeats: show.Tickets.Count(),
-                total: show.Tickets.Sum(t => t.Price)
-            );
-            return result;
+            return new ShowOneResult
+            {
+                Showid = show.Showid,
+                MovieId = show.Movieid,
+                RoomId = show.Roomid,
+                Start = show.Start
+            };
         }
 
 
