@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Cinema.DTO;
+using Data.Cinema.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Cinema
@@ -34,13 +34,13 @@ namespace Data.Cinema
             return (await dbContext.SaveChangesAsync()) > 0;
         }
 
-        public async Task<ShowDto[]> GetAll()
+        public async Task<ShowDao[]> GetAll()
         {
             // _logger.LogInformation($"Getting all Shows");
 
             return await dbContext.Showtimes
                 // Linq projection using Select
-                .Select(show => new ShowDto
+                .Select(show => new ShowDao
                 {
                     Showid = show.Showid,
                     Movieid = show.Movieid,

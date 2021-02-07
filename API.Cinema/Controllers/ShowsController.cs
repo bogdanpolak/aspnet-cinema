@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Data.Cinema;
 using API.Cinema.DTOs;
 using Data.Cinema.Entites;
+using Data.Cinema.DataAccess;
 
 namespace API.Cinema.Controllers
 {
@@ -16,38 +17,28 @@ namespace API.Cinema.Controllers
     public class ShowsController : ControllerBase
     {
         private readonly CinemaContext _context;
+        private readonly IShowRepository showRepository;
 
-        public ShowsController(CinemaContext context)
+        public ShowsController(CinemaContext context, IShowRepository showRepository)
         {
             _context = context;
+            this.showRepository = showRepository;
         }
 
-        // GET: api/Show
         [HttpGet]
-        public async Task<ActionResult<GetShowsResultDto>>
-            GetShowsAsync()
+        public async Task<ActionResult<GetShowsResultDto[]>> GetAsync()
         {
-            var showsInDataBase = await _context.Showtimes.ToListAsync();
-            var shows = showsInDataBase
-                .Aggregate(
-                    new List<GetShowsResultDto.Show>(),
-                    (acc, show) =>
-                    {
-                        var percentSold = Math.Round(
-                            show.Tickets.Count() / (decimal)show.Room.Rows
-                            / show.Room.Columns * 100, 1);
-                        var startDay = show.Start.ToString("yyyy-MM-dd");
-                        var startTime = show.Start.ToString("HH:mm");
-                        acc.Add(new GetShowsResultDto.Show(
-                            show.Showid, show.Movie.Title, show.Room.Name,
-                            startDay, startTime, percentSold));
-                        return acc;
-                    })
-                .OrderBy(r => r.Date)
-                .ThenBy(r => r.Time)
-                .ToList();
-            var result = new GetShowsResultDto(shows);
-            return result;
+            return new List<ShowDao>(await showRepository.GetAll())
+                .Select(show => new GetShowsResultDto {
+                    ShowId = show.Showid,
+                    Movie = show.Movie,
+                    Room = show.Room,
+                    Start = show.Start,
+                    Seats = show.Seats,
+                    Sold = show.Sold,
+                    Total = show.Total
+                })
+                .ToArray();
         }
 
 

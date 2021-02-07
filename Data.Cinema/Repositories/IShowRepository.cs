@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Data.Cinema.DTO;
+using Data.Cinema.DataAccess;
 
 namespace Data.Cinema
 {
@@ -7,7 +7,7 @@ namespace Data.Cinema
     {
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
-        Task<ShowDto[]> GetAll();
+        Task<ShowDao[]> GetAll();
         Task<bool> SaveChangesAsync();
     }
 }

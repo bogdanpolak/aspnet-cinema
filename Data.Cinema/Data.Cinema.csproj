@@ -11,6 +11,5 @@
   <ItemGroup>
     <Folder Include="Entites\" />
     <Folder Include="Repositories\" />
-    <Folder Include="DTO\" />
   </ItemGroup>
 </Project>

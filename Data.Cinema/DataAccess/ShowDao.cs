@@ -1,7 +1,7 @@
 ﻿using System;
-namespace Data.Cinema.DTO
+namespace Data.Cinema.DataAccess
 {
-    public class ShowDto
+    public class ShowDao
     {
         public string Showid { get; set; }
         public int Movieid { get; set; }
