@@ -4,42 +4,9 @@ namespace API.Cinema.DTOs
 {
     public class ShowOneResult
     {
-        public string Showid { get; }
-        public int MovieId { get; }
-        public int RoomId { get; }
-        public DateTime Start { get; }
-        public int Seats { get; }
-        public int SoldSeats { get; }
-        public decimal Total { get; }
-
-
-        public ShowOneResult(string showid, int movieId, int roomId,
-            DateTime start, int seats, int soldSeats, decimal total)
-        {
-            Showid = showid;
-            MovieId = movieId;
-            RoomId = roomId;
-            Start = start;
-            Seats = seats;
-            SoldSeats = soldSeats;
-            Total = total;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ShowOneResult other &&
-                   Showid == other.Showid &&
-                   MovieId == other.MovieId &&
-                   RoomId == other.RoomId &&
-                   Start == other.Start &&
-                   Seats == other.Seats &&
-                   SoldSeats == other.SoldSeats &&
-                   Total == other.Total;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Showid, MovieId, RoomId, Start, Seats, SoldSeats, Total);
-        }
+        public string Showid { get; set; }
+        public int MovieId { get; set; }
+        public int RoomId { get; set; }
+        public DateTime Start { get; set; }
     }
 }
