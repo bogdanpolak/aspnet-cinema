@@ -34,13 +34,13 @@ namespace Data.Cinema
             return (await dbContext.SaveChangesAsync()) > 0;
         }
 
-        public async Task<ShowDao[]> GetAll()
+        public async Task<ShowData[]> GetAll()
         {
             // _logger.LogInformation($"Getting all Shows");
 
             return await dbContext.Showtimes
                 // Linq projection using Select
-                .Select(show => new ShowDao
+                .Select(show => new ShowData
                 {
                     Showid = show.Showid,
                     Movieid = show.Movieid,

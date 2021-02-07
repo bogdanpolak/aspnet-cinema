@@ -28,7 +28,7 @@ namespace API.Cinema.Controllers
         [HttpGet]
         public async Task<ActionResult<GetShowsResultDto[]>> GetAsync()
         {
-            return new List<ShowDao>(await showRepository.GetAll())
+            return new List<ShowData>(await showRepository.GetAll())
                 .Select(show => new GetShowsResultDto {
                     ShowId = show.Showid,
                     Movie = show.Movie,

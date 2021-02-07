@@ -7,7 +7,7 @@ namespace Data.Cinema
     {
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
-        Task<ShowDao[]> GetAll();
+        Task<ShowData[]> GetAll();
         Task<bool> SaveChangesAsync();
     }
 }
