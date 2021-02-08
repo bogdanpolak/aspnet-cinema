@@ -46,15 +46,16 @@ namespace API.Cinema.Controllers
         [HttpGet("{showId}")]
         public async Task<ActionResult<ShowOneResult>> GetShowOne(string showId)
         {
-            var show = await _context.Showtimes.FindAsync(showId);
-            if (show == null) return NotFound();
-            return new ShowOneResult
-            {
-                Showid = show.Showid,
-                MovieId = show.Movieid,
-                RoomId = show.Roomid,
-                Start = show.Start
-            };
+            var show = await showRepository.FindByShowId(showId);
+            return show == null
+                ? NotFound()
+                : (ActionResult<ShowOneResult>)new ShowOneResult
+                {
+                    Showid = show.Showid,
+                    MovieId = show.Movieid,
+                    RoomId = show.Roomid,
+                    Start = show.Start
+                };
         }
 
 

@@ -56,5 +56,19 @@ namespace Data.Cinema
                 .ToArrayAsync();
         }
 
+        public async Task<ShowData> FindByShowId(string showId)
+        {
+            // _logger.LogInformation($"Getting all Shows");
+
+            var showEntity = await dbContext.Showtimes.FindAsync(showId);
+            return new ShowData
+            {
+                Showid = showEntity.Showid,
+                Movieid = showEntity.Movieid,
+                Roomid = showEntity.Roomid,
+                Start = showEntity.Start
+            };
+        }
+
     }
 }
