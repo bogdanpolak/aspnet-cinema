@@ -17,18 +17,18 @@ namespace API.Cinema.Controllers
     public class ShowsController : ControllerBase
     {
         private readonly CinemaContext _context;
-        private readonly IShowRepository showRepository;
+        private readonly IShowRepository _showRepository;
 
         public ShowsController(CinemaContext context, IShowRepository showRepository)
         {
             _context = context;
-            this.showRepository = showRepository;
+            _showRepository = showRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<ShowResult[]>> GetAsync()
         {
-            return new List<ShowData>(await showRepository.GetAll())
+            return new List<ShowData>(await _showRepository.GetAll())
                 .Select(show => new ShowResult
                 {
                     ShowId = show.Showid,
@@ -46,7 +46,7 @@ namespace API.Cinema.Controllers
         [HttpGet("{showId}")]
         public async Task<ActionResult<ShowOneResult>> GetShowOne(string showId)
         {
-            var show = await showRepository.FindByShowId(showId);
+            var show = await _showRepository.FindByShowId(showId);
             return show == null
                 ? NotFound()
                 : (ActionResult<ShowOneResult>)new ShowOneResult
@@ -55,7 +55,7 @@ namespace API.Cinema.Controllers
                     MovieId = show.Movieid,
                     RoomId = show.Roomid,
                     Start = show.Start
-                };
+            };
         }
 
 
