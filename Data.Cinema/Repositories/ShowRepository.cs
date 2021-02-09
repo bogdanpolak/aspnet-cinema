@@ -83,5 +83,20 @@ namespace Data.Cinema
                 })
                 .ToListAsync();
         }
+
+        public async Task<ShowDetailsData> FindByShowIdWithDetails(string showId)
+        {
+            return await dbContext.Showtimes
+                .Select(show => new ShowDetailsData
+                {
+                    Showid = show.Showid,
+                    Movieid = show.Movieid,
+                    Roomid = show.Roomid,
+                    Movie = show.Movie.Title,
+                    Room = show.Room.Name,
+                    Start = show.Start
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }

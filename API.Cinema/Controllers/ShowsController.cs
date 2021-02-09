@@ -61,21 +61,21 @@ namespace API.Cinema.Controllers
 
 
         [HttpGet("{showId}/tickets")]
-        public async Task<ActionResult<GetTicketsForShowResultDto>>
+        public async Task<ActionResult<ShowTicketsResult>>
             GetTicketsForShowAsync(string showId)
         {
-            var show = await _showRepository.FindByShowId(showId);
+            var show = await _showRepository.FindByShowIdWithDetails(showId);
             var showTickets = await _showRepository.GetShowTickets(showId);
             var tickets = GetTicketsForShow(showTickets);
-            return new GetTicketsForShowResultDto(
-                show.Movie,
-                show.Room,
-                show.Start,
-                tickets
-            );
+            return new ShowTicketsResult {
+                Movie = show.Movie,
+                Room = show.Room,
+                Start = show.Start,
+                Tickets = tickets
+            };
         }
 
-        private List<GetTicketsForShowResultDto.RowSeats> GetTicketsForShow(
+        private List<ShowTicketsResult.RowSeats> GetTicketsForShow(
             IList<ShowTicketsData> showTickets)
         {
             var distinctRows = showTickets
@@ -84,17 +84,17 @@ namespace API.Cinema.Controllers
                 .OrderBy(i => i)
                 .ToList();
             return distinctRows.Aggregate(
-                new List<GetTicketsForShowResultDto.RowSeats>(),
+                new List<ShowTicketsResult.RowSeats>(),
                 (acc, rowNum) =>
                 {
-                    acc.Add(new GetTicketsForShowResultDto.RowSeats(
-                        rowNum,
-                        showTickets
+                    acc.Add(new ShowTicketsResult.RowSeats {
+                        Row = rowNum,
+                        Seats = showTickets
                             .Where(t => t.RowNum == rowNum)
                             .Select(t => t.SeatNum)
                             .OrderBy(i => i)
                             .ToList()
-                    ));
+                    });
                     return acc;
                 });
         }
