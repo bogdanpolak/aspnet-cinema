@@ -9,6 +9,7 @@ using Data.Cinema;
 using API.Cinema.DTOs;
 using Data.Cinema.Entites;
 using Data.Cinema.DataAccess;
+using Data.Cinema.Models;
 
 namespace API.Cinema.Controllers
 {
@@ -59,42 +60,43 @@ namespace API.Cinema.Controllers
         }
 
 
-        [HttpGet("{showName}/tickets")]
+        [HttpGet("{showId}/tickets")]
         public async Task<ActionResult<GetTicketsForShowResultDto>>
-            GetTicketsForShowAsync(string showName)
+            GetTicketsForShowAsync(string showId)
         {
-            var show = await _context.Showtimes.FindAsync(showName);
-            var result = new GetTicketsForShowResultDto(
-                show.Movie.Title,
-                show.Room.Name,
+            var show = await _showRepository.FindByShowId(showId);
+            var showTickets = await _showRepository.GetShowTickets(showId);
+            var tickets = GetTicketsForShow(showTickets);
+            return new GetTicketsForShowResultDto(
+                show.Movie,
+                show.Room,
                 show.Start,
-                BuildTicketsForShow(show.Tickets.ToList())
+                tickets
             );
-            return result;
         }
 
-        private static List<GetTicketsForShowResultDto.RowSeats>
-            BuildTicketsForShow(IList<Ticket> showTickets)
+        private List<GetTicketsForShowResultDto.RowSeats> GetTicketsForShow(
+            IList<ShowTicketsData> showTickets)
         {
             var distinctRows = showTickets
-                .Select(t => t.Rownum)
+                .Select(t => t.RowNum)
                 .Distinct()
-                .OrderBy(i => i);
-            var tickets = distinctRows.Aggregate(
+                .OrderBy(i => i)
+                .ToList();
+            return distinctRows.Aggregate(
                 new List<GetTicketsForShowResultDto.RowSeats>(),
                 (acc, rowNum) =>
                 {
                     acc.Add(new GetTicketsForShowResultDto.RowSeats(
                         rowNum,
                         showTickets
-                        .Where(t => t.Rownum == rowNum)
-                        .Select(t => t.Seatnum)
-                        .OrderBy(i => i)
-                        .ToList()
+                            .Where(t => t.RowNum == rowNum)
+                            .Select(t => t.SeatNum)
+                            .OrderBy(i => i)
+                            .ToList()
                     ));
                     return acc;
                 });
-            return tickets;
         }
 
 

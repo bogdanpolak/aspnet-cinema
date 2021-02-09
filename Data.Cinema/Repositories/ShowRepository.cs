@@ -75,5 +75,16 @@ namespace Data.Cinema
             };
         }
 
+        public async Task<IList<ShowTicketsData>> GetShowTickets(string showId)
+        {
+            return await dbContext.Tickets
+                .Where(ticket => ticket.Showid == showId)
+                .Select(ticket => new ShowTicketsData
+                {
+                    RowNum = ticket.Rownum,
+                    SeatNum = ticket.Seatnum
+                })
+                .ToListAsync();
+        }
     }
 }
