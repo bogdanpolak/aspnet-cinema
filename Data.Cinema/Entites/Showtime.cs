@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Data.Cinema
+namespace Data.Cinema.Entites
 {
     public partial class Showtime
     {
