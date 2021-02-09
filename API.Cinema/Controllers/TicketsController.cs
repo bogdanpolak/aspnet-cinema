@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Data.Cinema;
 using Microsoft.EntityFrameworkCore;
+/* Cinema */
 using API.Cinema.DTOs;
 using Data.Cinema.Entites;
+using Data.Cinema;
 
 namespace API.Cinema.Controllers
 {
