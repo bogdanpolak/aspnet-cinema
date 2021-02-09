@@ -3,14 +3,14 @@ namespace Data.Cinema.DataAccess
 {
     public class ShowData
     {
-        public string Showid { get; set; }
-        public int Movieid { get; set; }
-        public int Roomid { get; set; }
-        public string Movie { get; set; }
-        public string Room { get; set; }
-        public DateTime Start { get; set; }
-        public int Seats { get; set; }
-        public int Sold { get; set; }
-        public decimal Total { get; set; }
+        public string Showid { get; internal set; }
+        public int Movieid { get; internal set; }
+        public int Roomid { get; internal set; }
+        public string Movie { get; internal set; }
+        public string Room { get; internal set; }
+        public DateTime Start { get; internal set; }
+        public int Seats { get; internal set; }
+        public int Sold { get; internal set; }
+        public decimal Total { get; internal set; }
     }
 }
