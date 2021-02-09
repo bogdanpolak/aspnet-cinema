@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Cinema.DataAccess;
+using Data.Cinema.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Cinema
@@ -60,13 +62,16 @@ namespace Data.Cinema
         {
             // _logger.LogInformation($"Getting all Shows");
 
-            var showEntity = await dbContext.Showtimes.FindAsync(showId);
+            var show = await dbContext.Showtimes.FindAsync(showId);
             return new ShowData
             {
-                Showid = showEntity.Showid,
-                Movieid = showEntity.Movieid,
-                Roomid = showEntity.Roomid,
-                Start = showEntity.Start
+                Showid = show.Showid,
+                Movieid = show.Movieid,
+                Roomid = show.Roomid,
+                Movie = show.Movie.Title,
+                Room = show.Room.Name,
+                Start = show.Start,
+                Seats = show.Room.Columns * show.Room.Rows,
             };
         }
 
