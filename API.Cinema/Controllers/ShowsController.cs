@@ -17,12 +17,10 @@ namespace API.Cinema.Controllers
     [ApiController]
     public class ShowsController : ControllerBase
     {
-        private readonly CinemaContext _context;
         private readonly IShowRepository _showRepository;
 
-        public ShowsController(CinemaContext context, IShowRepository showRepository)
+        public ShowsController(IShowRepository showRepository)
         {
-            _context = context;
             _showRepository = showRepository;
         }
 
@@ -104,9 +102,11 @@ namespace API.Cinema.Controllers
         // To protect from overposting attacks, enable the specific 
         // properties you want to bind to, for more details, see
         //  https://go.microsoft.com/fwlink/?linkid=2123754.
+        /*
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShowtime(string id, Showtime showtime)
         {
+            return BadRequest();
             if (id != showtime.Showid)
             {
                 return BadRequest();
@@ -132,11 +132,13 @@ namespace API.Cinema.Controllers
 
             return NoContent();
         }
+        */
 
         // POST: api/Show
         // To protect from overposting attacks, enable the specific
         // properties you want to bind to, for more details, see
         // https://go.microsoft.com/fwlink/?linkid=2123754.
+        /*
         [HttpPost]
         public async Task<ActionResult<Showtime>> PostShowtime(Showtime showtime)
         {
@@ -159,8 +161,10 @@ namespace API.Cinema.Controllers
 
             return CreatedAtAction("GetShowtime", new { id = showtime.Showid }, showtime);
         }
+        */
 
         // DELETE: api/Show/5
+        /*
         [HttpDelete("{id}")]
         public async Task<ActionResult<Showtime>> DeleteShowtime(string id)
         {
@@ -175,10 +179,7 @@ namespace API.Cinema.Controllers
 
             return showtime;
         }
+        */
 
-        private bool ShowtimeExists(string id)
-        {
-            return _context.Showtimes.Any(e => e.Showid == id);
-        }
     }
 }
