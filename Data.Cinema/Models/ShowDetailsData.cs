@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Data.Cinema.Models
 {
     public class ShowDetailsData
