@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Data.Cinema.DataAccess;
 using Data.Cinema.Models;
 
 namespace Data.Cinema

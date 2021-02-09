@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Data.Cinema;
 using API.Cinema.DTOs;
 using Data.Cinema.Entites;
-using Data.Cinema.DataAccess;
 using Data.Cinema.Models;
 
 namespace API.Cinema.Controllers
