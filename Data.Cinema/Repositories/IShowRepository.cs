@@ -9,8 +9,8 @@ namespace Data.Cinema
     {
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
-        Task<ShowData> FindByShowId(string showId);
-        Task<ShowData[]> GetAll();
+        Task<ShowExData> FindByShowId(string showId);
+        Task<ShowExData[]> GetAll();
         Task<IList<ShowTicketsData>> GetShowTickets(string showId);
         Task<bool> SaveChangesAsync();
     }

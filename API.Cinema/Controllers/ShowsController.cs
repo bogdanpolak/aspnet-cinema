@@ -29,7 +29,7 @@ namespace API.Cinema.Controllers
         [HttpGet]
         public async Task<ActionResult<ShowResult[]>> GetAsync()
         {
-            return new List<ShowData>(await _showRepository.GetAll())
+            return new List<ShowExData>(await _showRepository.GetAll())
                 .Select(show => new ShowResult
                 {
                     ShowId = show.Showid,

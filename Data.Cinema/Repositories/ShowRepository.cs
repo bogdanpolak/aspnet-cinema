@@ -36,13 +36,13 @@ namespace Data.Cinema
             return (await dbContext.SaveChangesAsync()) > 0;
         }
 
-        public async Task<ShowData[]> GetAll()
+        public async Task<ShowExData[]> GetAll()
         {
             // _logger.LogInformation($"Getting all Shows");
 
             return await dbContext.Showtimes
                 // Linq projection using Select
-                .Select(show => new ShowData
+                .Select(show => new ShowExData
                 {
                     Showid = show.Showid,
                     Movieid = show.Movieid,
@@ -58,12 +58,12 @@ namespace Data.Cinema
                 .ToArrayAsync();
         }
 
-        public async Task<ShowData> FindByShowId(string showId)
+        public async Task<ShowExData> FindByShowId(string showId)
         {
             // _logger.LogInformation($"Getting all Shows");
 
             var show = await dbContext.Showtimes.FindAsync(showId);
-            return new ShowData
+            return new ShowExData
             {
                 Showid = show.Showid,
                 Movieid = show.Movieid,
