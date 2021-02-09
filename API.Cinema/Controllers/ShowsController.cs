@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+/* Cinema */
 using Data.Cinema;
 using API.Cinema.DTOs;
-using Data.Cinema.Entites;
 using Data.Cinema.Models;
 
 namespace API.Cinema.Controllers
