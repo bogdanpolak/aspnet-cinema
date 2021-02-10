@@ -1,5 +1,6 @@
 ﻿using System;
-namespace Data.Cinema.DataAccess
+
+namespace Data.Cinema.Models
 {
     public class ShowExData
     {

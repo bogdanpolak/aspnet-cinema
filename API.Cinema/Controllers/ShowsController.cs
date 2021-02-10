@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+/* Cinema */
 using Data.Cinema;
 using API.Cinema.DTOs;
-using Data.Cinema.Entites;
-using Data.Cinema.DataAccess;
 using Data.Cinema.Models;
 
 namespace API.Cinema.Controllers
@@ -64,7 +60,7 @@ namespace API.Cinema.Controllers
         {
             var show = await _showRepository.FindByShowIdWithDetails(showId);
             var showTickets = await _showRepository.GetShowTickets(showId);
-            var tickets = GetTicketsForShow(showTickets);
+            var tickets = BuildRowSeatsArray(showTickets);
             return new ShowTicketsResult {
                 Movie = show.Movie,
                 Room = show.Room,
@@ -73,7 +69,7 @@ namespace API.Cinema.Controllers
             };
         }
 
-        private List<ShowTicketsResult.RowSeats> GetTicketsForShow(
+        private List<ShowTicketsResult.RowSeats> BuildRowSeatsArray(
             IList<ShowTicketsData> showTickets)
         {
             var distinctRows = showTickets
