@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Cinema.Entites;
 using Data.Cinema.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,24 +101,17 @@ namespace Data.Cinema
 
         public async Task UpdateShow(ShowData show)
         {
-            dbContext.Entry(show).State = EntityState.Modified;
-            try
-            {
-                await dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (await ShowExists(show.Showid))
-                {
-                    throw;
-                }
-                else
-                {
-                    throw new ShowNotExistsException(
-                        $"Show '{show.Showid}' does not exist. Not able to update ");
-                }
-            }
-
+            var showtime = await dbContext.Showtimes
+                .SingleOrDefaultAsync(sh => sh.Showid == show.Showid);
+            if (showtime == null) throw new ShowNotExistsException(
+                $"Show '{show.Showid}' does not exist. Not able to update ");
+            if (showtime.Movieid != show.Movieid)
+                showtime.Movieid = show.Movieid;
+            if (showtime.Roomid != show.Roomid)
+                showtime.Roomid = show.Roomid;
+            if (showtime.Start != show.Start)
+                showtime.Start = show.Start;
+            _ = await dbContext.SaveChangesAsync();
         }
 
         private async Task<bool> ShowExists(string showid)
