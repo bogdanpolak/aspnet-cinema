@@ -97,5 +97,32 @@ namespace Data.Cinema
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task UpdateShow(ShowData show)
+        {
+            dbContext.Entry(show).State = EntityState.Modified;
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (await ShowExists(show.Showid))
+                {
+                    throw;
+                }
+                else
+                {
+                    throw new ShowNotExistsException(
+                        $"Show '{show.Showid}' does not exist. Not able to update ");
+                }
+            }
+
+        }
+
+        private async Task<bool> ShowExists(string showid)
+        {
+            return await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Data.Cinema
         Task<IList<ShowTicketsData>> GetShowTickets(string showId);
         Task<bool> SaveChangesAsync();
         Task<ShowDetailsData> FindByShowIdWithDetails(string showId);
+        Task UpdateShow(ShowData show);
     }
 }
