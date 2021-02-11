@@ -94,41 +94,18 @@ namespace API.Cinema.Controllers
         }
 
 
-        // PUT: api/Show/5
-        // To protect from overposting attacks, enable the specific 
-        // properties you want to bind to, for more details, see
-        //  https://go.microsoft.com/fwlink/?linkid=2123754.
-        /*
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutShowtime(string id, Showtime showtime)
+        [HttpPut("{showId}")]
+        public async Task<IActionResult> PutShowtime(string showId, ShowRequest show)
         {
-            return BadRequest();
-            if (id != showtime.Showid)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(showtime).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ShowtimeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            if (showId != show.Showid) return BadRequest();
+            await _showRepository.UpdateShow(new ShowData {
+                Showid = show.Showid,
+                Movieid = show.MovieId,
+                Roomid = show.RoomId,
+                Start = show.Start
+            });
             return NoContent();
         }
-        */
 
         // POST: api/Show
         // To protect from overposting attacks, enable the specific
@@ -158,6 +135,10 @@ namespace API.Cinema.Controllers
             return CreatedAtAction("GetShowtime", new { id = showtime.Showid }, showtime);
         }
         */
+
+        // To protect from overposting attacks, enable the specific 
+        // properties you want to bind to, for more details, see
+        //  https://go.microsoft.com/fwlink/?linkid=2123754.
 
         // DELETE: api/Show/5
         /*

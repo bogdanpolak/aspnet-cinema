@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Cinema.Entites;
 using Data.Cinema.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -97,5 +98,34 @@ namespace Data.Cinema
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task UpdateShow(ShowData show)
+        {
+            var showtime = await dbContext.Showtimes
+                .SingleOrDefaultAsync(sh => sh.Showid == show.Showid);
+            if (showtime == null) throw CreateErrorShowNotExists(show.Showid);
+            if (showtime.Movieid != show.Movieid)
+            {
+                if (!await MovieExists(show.Movieid))
+                    throw CreateErrorMovieNotExists(show.Movieid);
+                showtime.Movieid = show.Movieid;
+
+            }
+            if (showtime.Roomid != show.Roomid)
+                showtime.Roomid = show.Roomid;
+            if (showtime.Start != show.Start)
+                showtime.Start = show.Start;
+            _ = await dbContext.SaveChangesAsync();
+        }
+
+        private async Task<bool> ShowExists(string showid)
+            => await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
+        private async Task<bool> MovieExists(int movieId)
+            => await dbContext.Showtimes.AnyAsync(show => show.Movieid == movieId);
+
+        private ShowNotExistsException CreateErrorShowNotExists(string showid)
+            => new ShowNotExistsException($"Show \"{showid}\" doesn't exist");
+        private MovieNotExistsException CreateErrorMovieNotExists(int movieId)
+            => new MovieNotExistsException($"Movie ID={movieId} doesn't exist");
     }
 }
