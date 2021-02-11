@@ -103,10 +103,14 @@ namespace Data.Cinema
         {
             var showtime = await dbContext.Showtimes
                 .SingleOrDefaultAsync(sh => sh.Showid == show.Showid);
-            if (showtime == null) throw new ShowNotExistsException(
-                $"Show '{show.Showid}' does not exist. Not able to update ");
+            if (showtime == null) throw CreateErrorShowNotExists(show.Showid);
             if (showtime.Movieid != show.Movieid)
+            {
+                if (!await MovieExists(show.Movieid))
+                    throw CreateErrorMovieNotExists(show.Movieid);
                 showtime.Movieid = show.Movieid;
+
+            }
             if (showtime.Roomid != show.Roomid)
                 showtime.Roomid = show.Roomid;
             if (showtime.Start != show.Start)
@@ -115,8 +119,13 @@ namespace Data.Cinema
         }
 
         private async Task<bool> ShowExists(string showid)
-        {
-            return await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
-        }
+            => await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
+        private async Task<bool> MovieExists(int movieId)
+            => await dbContext.Showtimes.AnyAsync(show => show.Movieid == movieId);
+
+        private ShowNotExistsException CreateErrorShowNotExists(string showid)
+            => new ShowNotExistsException($"Show \"{showid}\" doesn't exist");
+        private MovieNotExistsException CreateErrorMovieNotExists(int movieId)
+            => new MovieNotExistsException($"Movie ID={movieId} doesn't exist");
     }
 }
