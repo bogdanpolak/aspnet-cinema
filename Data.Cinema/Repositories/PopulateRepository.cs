@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Cinema.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Cinema.Repositories
@@ -30,6 +31,11 @@ namespace Data.Cinema.Repositories
                     $"TRUNCATE TABLE {tabname} RESTART IDENTITY CASCADE");
             }
         }
+
+        public async Task AddMovies(IEnumerable<Movie> movies)
+        {
+            await _dbContext.Movies.AddRangeAsync(movies);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

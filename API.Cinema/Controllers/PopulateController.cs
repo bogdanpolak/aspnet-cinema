@@ -68,10 +68,10 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<PopulateResult>> Get()
         {
             await _populateRepository.ClearDatabase();
-            // _populateRepository.
             var movies = new List<Movie>();
             foreach (var title in movieTitles)
                 movies.Add(new Movie { Title = title });
+            await _populateRepository.AddMovies(movies);
             return new PopulateResult { MoviesCreated = movieTitles.Count };
         }
 
