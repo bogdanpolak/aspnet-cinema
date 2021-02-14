@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +21,15 @@ namespace Data.Cinema.Repositories
 
         public async Task ClearDatabase()
         {
-            await _dbContext.Database.ExecuteSqlRawAsync("DELETE from tickets");
-            await _dbContext.Database.ExecuteSqlRawAsync("DELETE from shows");
-            await _dbContext.Database.ExecuteSqlRawAsync("DELETE from rooms");
-            await _dbContext.Database.ExecuteSqlRawAsync("DELETE from movies");
+            var tables = new List<string> {
+                "tickets", "shows", "rooms", "movies"
+            };
+            foreach (var tabname in tables)
+            {
+                await _dbContext.Database.ExecuteSqlRawAsync(
+                    $"TRUNCATE TABLE {tabname} RESTART IDENTITY CASCADE");
+            }
+        }
         }
     }
 }
