@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Data.Cinema.Entites
 {
-    public partial class Showtime
+    public partial class Show
     {
-        public Showtime()
+        public Show()
         {
             Tickets = new HashSet<Ticket>();
         }

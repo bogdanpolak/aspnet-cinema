@@ -14,6 +14,6 @@ namespace Data.Cinema.Entites
         public int Seatnum { get; set; }
         public decimal Price { get; set; }
 
-        public virtual Showtime Show { get; set; }
+        public virtual Show Show { get; set; }
     }
 }
