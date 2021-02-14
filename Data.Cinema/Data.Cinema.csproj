@@ -12,5 +12,6 @@
   <ItemGroup>
     <Folder Include="Entites\" />
     <Folder Include="Repositories\" />
+    <Folder Include="Errors\" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Data.Cinema
+namespace Data.Cinema.Errors
 {
     [Serializable]
     internal class MovieNotExistsException : Exception
