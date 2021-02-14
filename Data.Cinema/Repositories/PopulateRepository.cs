@@ -44,14 +44,16 @@ namespace Data.Cinema.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task AddShows(List<Show> shows)
+        public async Task AddShows(List<Show> shows)
         {
-            throw new NotImplementedException();
+            await _dbContext.Shows.AddRangeAsync(shows);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task AddTickets(List<Ticket> tickets)
+        public async Task AddTickets(List<Ticket> tickets)
         {
-            throw new NotImplementedException();
+            await _dbContext.Tickets.AddRangeAsync(tickets);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
