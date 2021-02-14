@@ -20,7 +20,7 @@ namespace Data.Cinema
 
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
-        public virtual DbSet<Showtime> Showtimes { get; set; }
+        public virtual DbSet<Show> Shows { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -64,7 +64,7 @@ namespace Data.Cinema
                 entity.Property(e => e.Rows).HasColumnName("rows");
             });
 
-            modelBuilder.Entity<Showtime>(entity =>
+            modelBuilder.Entity<Show>(entity =>
             {
                 entity.HasKey(e => e.Showid)
                     .HasName("showtimes_pkey");

@@ -40,7 +40,7 @@ namespace Data.Cinema
         {
             // _logger.LogInformation($"Getting all Shows");
 
-            return await dbContext.Showtimes
+            return await dbContext.Shows
                 // Linq projection using Select
                 .Select(show => new ShowExData
                 {
@@ -62,7 +62,7 @@ namespace Data.Cinema
         {
             // _logger.LogInformation($"Getting all Shows");
 
-            var show = await dbContext.Showtimes.FindAsync(showId);
+            var show = await dbContext.Shows.FindAsync(showId);
             return new ShowData
             {
                 Showid = show.Showid,
@@ -86,7 +86,7 @@ namespace Data.Cinema
 
         public async Task<ShowDetailsData> FindByShowIdWithDetails(string showId)
         {
-            return await dbContext.Showtimes
+            return await dbContext.Shows
                 .Select(show => new ShowDetailsData
                 {
                     Showid = show.Showid,
@@ -101,7 +101,7 @@ namespace Data.Cinema
 
         public async Task UpdateShow(ShowData show)
         {
-            var showtime = await dbContext.Showtimes
+            var showtime = await dbContext.Shows
                 .SingleOrDefaultAsync(sh => sh.Showid == show.Showid);
             if (showtime == null) throw CreateErrorShowNotExists(show.Showid);
             if (showtime.Movieid != show.Movieid)
@@ -119,9 +119,9 @@ namespace Data.Cinema
         }
 
         private async Task<bool> ShowExists(string showid)
-            => await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
+            => await dbContext.Shows.AnyAsync(show => show.Showid == showid);
         private async Task<bool> MovieExists(int movieId)
-            => await dbContext.Showtimes.AnyAsync(show => show.Movieid == movieId);
+            => await dbContext.Shows.AnyAsync(show => show.Movieid == movieId);
 
         private ShowNotExistsException CreateErrorShowNotExists(string showid)
             => new ShowNotExistsException($"Show \"{showid}\" doesn't exist");
