@@ -37,5 +37,11 @@ namespace Data.Cinema.Repositories
             await _dbContext.Movies.AddRangeAsync(movies);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task AddRooms(IEnumerable<Room> movies)
+        {
+            await _dbContext.Rooms.AddRangeAsync(movies);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

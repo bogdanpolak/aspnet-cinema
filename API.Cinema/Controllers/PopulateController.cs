@@ -37,10 +37,12 @@ namespace API.Cinema.Controllers
             "Sherlock Holmes 3"
         };
 
-        /*
-        "Turquouse Room",8,20
-        "Garent Room",18,20
-        */
+        private readonly List<Room> cinemaRooms = new List<Room>
+        {
+            new Room { Name = "Turquouse Room", Rows = 8, Columns = 14 },
+            new Room { Name = "Garent Room", Rows = 22, Columns = 16 },
+        };
+
         /* 
         "2021-03-03 19:30"
         "2021-03-04 19:30"
@@ -64,6 +66,7 @@ namespace API.Cinema.Controllers
         5	15	12.5
         5	16	12.5
         */
+
         [HttpGet]
         public async Task<ActionResult<PopulateResult>> Get()
         {
@@ -72,6 +75,7 @@ namespace API.Cinema.Controllers
             foreach (var title in movieTitles)
                 movies.Add(new Movie { Title = title });
             await _populateRepository.AddMovies(movies);
+            await _populateRepository.AddRooms(cinemaRooms);
             return new PopulateResult { MoviesCreated = movieTitles.Count };
         }
 

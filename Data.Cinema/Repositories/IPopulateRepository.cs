@@ -8,6 +8,7 @@ namespace Data.Cinema.Repositories
     public interface IPopulateRepository
     {
         Task AddMovies(IEnumerable<Movie> movies);
+        Task AddRooms(IEnumerable<Room> movies);
         Task ClearDatabase();
     }
 }
