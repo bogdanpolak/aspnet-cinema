@@ -39,7 +39,7 @@ namespace API.Cinema.Controllers
 
 
         [HttpGet("{showId}")]
-        public async Task<ActionResult<ShowOneResult>> GetShowOne(string showId)
+        public async Task<ActionResult<ShowOneResult>> GetShowOne(int showId)
         {
             var show = await _showRepository.FindByShowId(showId);
             return show == null
@@ -56,7 +56,7 @@ namespace API.Cinema.Controllers
 
         [HttpGet("{showId}/tickets")]
         public async Task<ActionResult<ShowTicketsResult>>
-            GetTicketsForShowAsync(string showId)
+            GetTicketsForShowAsync(int showId)
         {
             var show = await _showRepository.FindByShowIdWithDetails(showId);
             var showTickets = await _showRepository.GetShowTickets(showId);
@@ -95,7 +95,7 @@ namespace API.Cinema.Controllers
 
 
         [HttpPut("{showId}")]
-        public async Task<IActionResult> PutShowtime(string showId, ShowRequest show)
+        public async Task<IActionResult> PutShow(int showId, ShowRequest show)
         {
             if (showId != show.Showid) return BadRequest();
             await _showRepository.UpdateShow(new ShowData {
@@ -113,16 +113,16 @@ namespace API.Cinema.Controllers
         // https://go.microsoft.com/fwlink/?linkid=2123754.
         /*
         [HttpPost]
-        public async Task<ActionResult<Showtime>> PostShowtime(Showtime showtime)
+        public async Task<ActionResult<Show>> PostShow(Show show)
         {
-            _context.Showtimes.Add(showtime);
+            _context.Show.Add(show);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ShowtimeExists(showtime.Showid))
+                if (ShowExists(show.Showid))
                 {
                     return Conflict();
                 }
@@ -132,7 +132,7 @@ namespace API.Cinema.Controllers
                 }
             }
 
-            return CreatedAtAction("GetShowtime", new { id = showtime.Showid }, showtime);
+            return CreatedAtAction("GetShow", new { id = show.Showid }, show);
         }
         */
 
@@ -143,18 +143,18 @@ namespace API.Cinema.Controllers
         // DELETE: api/Show/5
         /*
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Showtime>> DeleteShowtime(string id)
+        public async Task<ActionResult<Show>> DeleteShow(string id)
         {
-            var showtime = await _context.Showtimes.FindAsync(id);
-            if (showtime == null)
+            var show = await _context.Show.FindAsync(id);
+            if (show == null)
             {
                 return NotFound();
             }
 
-            _context.Showtimes.Remove(showtime);
+            _context.Show.Remove(show);
             await _context.SaveChangesAsync();
 
-            return showtime;
+            return show;
         }
         */
 

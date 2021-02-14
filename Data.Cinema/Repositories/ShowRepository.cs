@@ -40,7 +40,7 @@ namespace Data.Cinema
         {
             // _logger.LogInformation($"Getting all Shows");
 
-            return await dbContext.Showtimes
+            return await dbContext.Shows
                 // Linq projection using Select
                 .Select(show => new ShowExData
                 {
@@ -58,11 +58,11 @@ namespace Data.Cinema
                 .ToArrayAsync();
         }
 
-        public async Task<ShowData> FindByShowId(string showId)
+        public async Task<ShowData> FindByShowId(int showId)
         {
             // _logger.LogInformation($"Getting all Shows");
 
-            var show = await dbContext.Showtimes.FindAsync(showId);
+            var show = await dbContext.Shows.FindAsync(showId);
             return new ShowData
             {
                 Showid = show.Showid,
@@ -72,7 +72,7 @@ namespace Data.Cinema
             };
         }
 
-        public async Task<IList<ShowTicketsData>> GetShowTickets(string showId)
+        public async Task<IList<ShowTicketsData>> GetShowTickets(int showId)
         {
             return await dbContext.Tickets
                 .Where(ticket => ticket.Showid == showId)
@@ -84,9 +84,10 @@ namespace Data.Cinema
                 .ToListAsync();
         }
 
-        public async Task<ShowDetailsData> FindByShowIdWithDetails(string showId)
+        public async Task<ShowDetailsData> FindByShowIdWithDetails(int showId)
         {
-            return await dbContext.Showtimes
+            return await dbContext.Shows
+                .Where(sh => sh.Showid == showId)
                 .Select(show => new ShowDetailsData
                 {
                     Showid = show.Showid,
@@ -99,31 +100,31 @@ namespace Data.Cinema
                 .FirstOrDefaultAsync();
         }
 
-        public async Task UpdateShow(ShowData show)
+        public async Task UpdateShow(ShowData showData)
         {
-            var showtime = await dbContext.Showtimes
-                .SingleOrDefaultAsync(sh => sh.Showid == show.Showid);
-            if (showtime == null) throw CreateErrorShowNotExists(show.Showid);
-            if (showtime.Movieid != show.Movieid)
+            var showEntity = await dbContext.Shows
+                .SingleOrDefaultAsync(sh => sh.Showid == showData.Showid);
+            if (showEntity == null) throw CreateErrorShowNotExists(showData.Showid);
+            if (showEntity.Movieid != showData.Movieid)
             {
-                if (!await MovieExists(show.Movieid))
-                    throw CreateErrorMovieNotExists(show.Movieid);
-                showtime.Movieid = show.Movieid;
+                if (!await MovieExists(showData.Movieid))
+                    throw CreateErrorMovieNotExists(showData.Movieid);
+                showEntity.Movieid = showData.Movieid;
 
             }
-            if (showtime.Roomid != show.Roomid)
-                showtime.Roomid = show.Roomid;
-            if (showtime.Start != show.Start)
-                showtime.Start = show.Start;
+            if (showEntity.Roomid != showData.Roomid)
+                showEntity.Roomid = showData.Roomid;
+            if (showEntity.Start != showData.Start)
+                showEntity.Start = showData.Start;
             _ = await dbContext.SaveChangesAsync();
         }
 
-        private async Task<bool> ShowExists(string showid)
-            => await dbContext.Showtimes.AnyAsync(show => show.Showid == showid);
+        private async Task<bool> ShowExists(int showid)
+            => await dbContext.Shows.AnyAsync(show => show.Showid == showid);
         private async Task<bool> MovieExists(int movieId)
-            => await dbContext.Showtimes.AnyAsync(show => show.Movieid == movieId);
+            => await dbContext.Shows.AnyAsync(show => show.Movieid == movieId);
 
-        private ShowNotExistsException CreateErrorShowNotExists(string showid)
+        private ShowNotExistsException CreateErrorShowNotExists(int showid)
             => new ShowNotExistsException($"Show \"{showid}\" doesn't exist");
         private MovieNotExistsException CreateErrorMovieNotExists(int movieId)
             => new MovieNotExistsException($"Movie ID={movieId} doesn't exist");

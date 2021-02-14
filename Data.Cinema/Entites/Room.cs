@@ -9,7 +9,7 @@ namespace Data.Cinema.Entites
     {
         public Room()
         {
-            Showtimes = new HashSet<Showtime>();
+            Shows = new HashSet<Show>();
         }
 
         public int Roomid { get; set; }
@@ -17,6 +17,6 @@ namespace Data.Cinema.Entites
         public int Rows { get; set; }
         public int Columns { get; set; }
 
-        public virtual ICollection<Showtime> Showtimes { get; set; }
+        public virtual ICollection<Show> Shows { get; set; }
     }
 }

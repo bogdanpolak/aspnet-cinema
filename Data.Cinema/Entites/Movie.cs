@@ -9,12 +9,12 @@ namespace Data.Cinema.Entites
     {
         public Movie()
         {
-            Showtimes = new HashSet<Showtime>();
+            Shows = new HashSet<Show>();
         }
 
         public int Movieid { get; set; }
         public string Title { get; set; }
 
-        public virtual ICollection<Showtime> Showtimes { get; set; }
+        public virtual ICollection<Show> Shows { get; set; }
     }
 }

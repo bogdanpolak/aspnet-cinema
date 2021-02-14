@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Data.Cinema.Entites
 {
-    public partial class Showtime
+    public partial class Show
     {
-        public Showtime()
+        public Show()
         {
             Tickets = new HashSet<Ticket>();
         }
 
-        public string Showid { get; set; }
+        public int Showid { get; set; }
         public int Movieid { get; set; }
         public int Roomid { get; set; }
         public DateTime Start { get; set; }

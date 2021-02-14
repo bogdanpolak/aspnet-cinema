@@ -20,7 +20,7 @@ namespace Data.Cinema
 
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
-        public virtual DbSet<Showtime> Showtimes { get; set; }
+        public virtual DbSet<Show> Shows { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -64,12 +64,12 @@ namespace Data.Cinema
                 entity.Property(e => e.Rows).HasColumnName("rows");
             });
 
-            modelBuilder.Entity<Showtime>(entity =>
+            modelBuilder.Entity<Show>(entity =>
             {
                 entity.HasKey(e => e.Showid)
-                    .HasName("showtimes_pkey");
+                    .HasName("shows_pkey");
 
-                entity.ToTable("showtimes");
+                entity.ToTable("shows");
 
                 entity.Property(e => e.Showid).HasColumnName("showid");
 
@@ -80,16 +80,16 @@ namespace Data.Cinema
                 entity.Property(e => e.Start).HasColumnName("start");
 
                 entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.Showtimes)
+                    .WithMany(p => p.Shows)
                     .HasForeignKey(d => d.Movieid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("showtimes_movieid_fkey");
+                    .HasConstraintName("shows_movieid_fkey");
 
                 entity.HasOne(d => d.Room)
-                    .WithMany(p => p.Showtimes)
+                    .WithMany(p => p.Shows)
                     .HasForeignKey(d => d.Roomid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("showtimes_roomid_fkey");
+                    .HasConstraintName("shows_roomid_fkey");
             });
 
             modelBuilder.Entity<Ticket>(entity =>
