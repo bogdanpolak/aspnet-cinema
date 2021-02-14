@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Cinema.Controllers.DTOs;
+using API.Cinema.Logic.Populate;
 using Data.Cinema.Entites;
 using Data.Cinema.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -19,29 +20,6 @@ namespace API.Cinema.Controllers
             _populateRepository = populateRepository;
         }
 
-        private readonly List<string> movieTitles = new List<string> {
-            "Jumanji: Level One",
-            "Supernova",
-            "Little Fish",
-            "The Mauritanian",
-            "Tom and Jerry",
-            "Godzilla vs.Kong",
-            "Peter Rabbit 2: The Runaway",
-            "A Quiet Place Part II",
-            "Black Widow",
-            "Ghostbusters: Afterlife",
-            "Top Gun: Maverick",
-            "Dune",
-            "Mission: Impossible 7",
-            "The Matrix 4",
-            "Sherlock Holmes 3"
-        };
-
-        private readonly List<Room> cinemaRooms = new List<Room>
-        {
-            new Room { Name = "Turquouse Room", Rows = 8, Columns = 14 },
-            new Room { Name = "Garent Room", Rows = 22, Columns = 16 },
-        };
 
         /* 
         "2021-03-03 19:30"
@@ -71,12 +49,14 @@ namespace API.Cinema.Controllers
         public async Task<ActionResult<PopulateResult>> Get()
         {
             await _populateRepository.ClearDatabase();
-            var movies = new List<Movie>();
-            foreach (var title in movieTitles)
-                movies.Add(new Movie { Title = title });
+            var movies = DataPopulator.GenerateMovies();
+            var rooms = DataPopulator.GenerateRooms();
             await _populateRepository.AddMovies(movies);
-            await _populateRepository.AddRooms(cinemaRooms);
-            return new PopulateResult { MoviesCreated = movieTitles.Count };
+            await _populateRepository.AddRooms(rooms);
+            return new PopulateResult {
+                MoviesCreated = movies.Count,
+                RoomsCreated = rooms.Count
+            };
         }
 
     }
