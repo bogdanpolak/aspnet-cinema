@@ -43,5 +43,15 @@ namespace Data.Cinema.Repositories
             await _dbContext.Rooms.AddRangeAsync(movies);
             await _dbContext.SaveChangesAsync();
         }
+
+        public Task AddShows(List<Show> shows)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddTickets(List<Ticket> tickets)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

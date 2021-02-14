@@ -51,8 +51,12 @@ namespace API.Cinema.Controllers
             await _populateRepository.ClearDatabase();
             var movies = DataPopulator.GenerateMovies();
             var rooms = DataPopulator.GenerateRooms();
+            var shows = DataPopulator.GenerateShows(movies, rooms);
+            var tickets = DataPopulator.GenerateTickets(shows);
             await _populateRepository.AddMovies(movies);
             await _populateRepository.AddRooms(rooms);
+            await _populateRepository.AddShows(shows);
+            await _populateRepository.AddTickets(tickets);
             return new PopulateResult {
                 MoviesCreated = movies.Count,
                 RoomsCreated = rooms.Count

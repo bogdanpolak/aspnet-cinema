@@ -10,5 +10,7 @@ namespace Data.Cinema.Repositories
         Task AddMovies(IEnumerable<Movie> movies);
         Task AddRooms(IEnumerable<Room> movies);
         Task ClearDatabase();
+        Task AddShows(List<Show> shows);
+        Task AddTickets(List<Ticket> tickets);
     }
 }

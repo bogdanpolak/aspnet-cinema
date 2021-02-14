@@ -33,5 +33,15 @@ namespace API.Cinema.Logic.Populate
                 new Room { Name = "Garent Room", Rows = 22, Columns = 16 },
             };
 
+        public static List<Show> GenerateShows(IEnumerable<Movie> movies, IEnumerable<Room> rooms)
+        {
+            return new List<Show>();
+        }
+
+        public static List<Ticket> GenerateTickets(IEnumerable<Show> shows)
+        {
+            return new List<Ticket>();
+        }
+
     }
 }
