@@ -39,7 +39,7 @@ namespace API.Cinema.Controllers
 
 
         [HttpGet("{showId}")]
-        public async Task<ActionResult<ShowOneResult>> GetShowOne(string showId)
+        public async Task<ActionResult<ShowOneResult>> GetShowOne(int showId)
         {
             var show = await _showRepository.FindByShowId(showId);
             return show == null
@@ -56,7 +56,7 @@ namespace API.Cinema.Controllers
 
         [HttpGet("{showId}/tickets")]
         public async Task<ActionResult<ShowTicketsResult>>
-            GetTicketsForShowAsync(string showId)
+            GetTicketsForShowAsync(int showId)
         {
             var show = await _showRepository.FindByShowIdWithDetails(showId);
             var showTickets = await _showRepository.GetShowTickets(showId);
@@ -95,7 +95,7 @@ namespace API.Cinema.Controllers
 
 
         [HttpPut("{showId}")]
-        public async Task<IActionResult> PutShow(string showId, ShowRequest show)
+        public async Task<IActionResult> PutShow(int showId, ShowRequest show)
         {
             if (showId != show.Showid) return BadRequest();
             await _showRepository.UpdateShow(new ShowData {

@@ -67,9 +67,9 @@ namespace Data.Cinema
             modelBuilder.Entity<Show>(entity =>
             {
                 entity.HasKey(e => e.Showid)
-                    .HasName("showtimes_pkey");
+                    .HasName("shows_pkey");
 
-                entity.ToTable("showtimes");
+                entity.ToTable("shows");
 
                 entity.Property(e => e.Showid).HasColumnName("showid");
 
@@ -80,16 +80,16 @@ namespace Data.Cinema
                 entity.Property(e => e.Start).HasColumnName("start");
 
                 entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.Showtimes)
+                    .WithMany(p => p.Shows)
                     .HasForeignKey(d => d.Movieid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("showtimes_movieid_fkey");
+                    .HasConstraintName("shows_movieid_fkey");
 
                 entity.HasOne(d => d.Room)
-                    .WithMany(p => p.Showtimes)
+                    .WithMany(p => p.Shows)
                     .HasForeignKey(d => d.Roomid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("showtimes_roomid_fkey");
+                    .HasConstraintName("shows_roomid_fkey");
             });
 
             modelBuilder.Entity<Ticket>(entity =>

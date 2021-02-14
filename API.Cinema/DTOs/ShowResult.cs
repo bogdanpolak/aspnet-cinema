@@ -4,7 +4,7 @@ namespace API.Cinema.DTOs
 {
     public class ShowResult
     {
-        public String ShowId { get; set; }
+        public int ShowId { get; set; }
         public String Movie { get; set; }
         public String Room { get; set; }
         public DateTime Start { get; set; }

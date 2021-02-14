@@ -44,7 +44,7 @@ namespace API.Cinema.Controllers
             PostTicketAsync([FromBody] PostTicketsRequest request)
         {
             var isBooked = _context.Tickets.Any(t =>
-                t.Showid == request.ShowKey &&
+                t.Showid == request.ShowId &&
                 t.Rownum == request.RowNum &&
                 t.Seatnum == request.SeatNum);
 
@@ -53,7 +53,7 @@ namespace API.Cinema.Controllers
 
             var ticket = new Ticket()
             {
-                Showid = request.ShowKey,
+                Showid = request.ShowId,
                 Rownum = request.RowNum,
                 Seatnum = request.SeatNum,
                 Price = request.Price
@@ -65,7 +65,7 @@ namespace API.Cinema.Controllers
             }
             catch (DbUpdateException)
             {
-                if (TicketExists(request.ShowKey, request.RowNum, request.SeatNum))
+                if (TicketExists(request.ShowId, request.RowNum, request.SeatNum))
                 {
                     return Conflict();
                 }
@@ -80,7 +80,7 @@ namespace API.Cinema.Controllers
                 ticket);
         }
 
-        private bool TicketExists(string id, int row, int seat)
+        private bool TicketExists(int id, int row, int seat)
             => _context.Tickets
                 .Any(e => e.Showid == id &&
                     e.Rownum == row &&
