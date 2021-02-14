@@ -20,31 +20,6 @@ namespace API.Cinema.Controllers
             _populateRepository = populateRepository;
         }
 
-
-        /* 
-        "2021-03-03 19:30"
-        "2021-03-04 19:30"
-        "2021-03-05 18:00"
-        "2021-03-05 20:30"
-        "2021-03-06 12:30"
-        "2021-03-06 15:00"
-        "2021-03-06 18:00"
-        "2021-03-06 20:30"
-        */
-        /* Tickets (row, seat, price)
-        1	10	15
-        1	11	15
-        2	1	15
-        2	3	15
-        2	11	12.99
-        5	11	10
-        5	12	17.5
-        5	13	17.5
-        5	14	12.5
-        5	15	12.5
-        5	16	12.5
-        */
-
         [HttpGet]
         public async Task<ActionResult<PopulateResult>> Get()
         {
@@ -59,7 +34,9 @@ namespace API.Cinema.Controllers
             await _populateRepository.AddTickets(tickets);
             return new PopulateResult {
                 MoviesCreated = movies.Count,
-                RoomsCreated = rooms.Count
+                RoomsCreated = rooms.Count,
+                ShowsCreated = shows.Count,
+                TicketsSold = tickets.Count
             };
         }
 
