@@ -95,7 +95,7 @@ namespace API.Cinema.Controllers
 
 
         [HttpPut("{showId}")]
-        public async Task<IActionResult> PutShowtime(string showId, ShowRequest show)
+        public async Task<IActionResult> PutShow(string showId, ShowRequest show)
         {
             if (showId != show.Showid) return BadRequest();
             await _showRepository.UpdateShow(new ShowData {
