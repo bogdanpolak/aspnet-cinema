@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Data.Cinema.Entites;
 
 namespace API.Cinema.Logic.Populate
@@ -33,24 +34,39 @@ namespace API.Cinema.Logic.Populate
                 new Room { Name = "Garent Room", Rows = 22, Columns = 16 },
             };
 
-        public static List<Show> GenerateShows(IEnumerable<Movie> movies, IEnumerable<Room> rooms)
+        public static List<Show> GenerateShows(IList<Movie> movies, IList<Room> rooms)
         {
-            return new List<Show> {
-                new Show { Movieid = 1, Roomid = 1, Start = StartDate("2021-03-03 19:30")}
+            var weekSchedule = new Dictionary<DayOfWeek, string>() {
+                { DayOfWeek.Monday, "18:30" },
+                { DayOfWeek.Tuesday, "18:30" },
+                { DayOfWeek.Wednesday, "18:00,20:30" },
+                { DayOfWeek.Thursday, "18:00,20:30" },
+                { DayOfWeek.Friday, "18:00,20:30" },
+                { DayOfWeek.Saturday, "13:30,16:00,18:30,21:00" },
+                { DayOfWeek.Sunday, "12:00,14:30,17:00,19:30" },
             };
-            /* 
-            "2021-03-03 19:30"
-            "2021-03-04 19:30"
-            "2021-03-05 18:00"
-            "2021-03-05 20:30"
-            "2021-03-06 12:30"
-            "2021-03-06 15:00"
-            "2021-03-06 18:00"
-            "2021-03-06 20:30"
-            */
+            var ago60 = DateTime.Now.AddDays(-30);
+            var startDate = new DateTime(ago60.Year, ago60.Month, 1);
+            var endDate = DateTime.Now.AddDays(+7);
+            var moveid = 0;
+            var shows = new List<Show>();
+            foreach (var day in EachDay(startDate,endDate))
+            {
+                var startStr = weekSchedule[day.DayOfWeek];
+                var daySchdulesText = new List<string>(startStr.Split(','));
+                var starts = daySchdulesText
+                    .Select( t => ParseTime(t) )
+                    .ToList();
+                var start = new DateTime(day.Year, day.Month, day.Day,
+                    starts[0].Hours, starts[0].Hours, starts[0].Seconds);
+                shows.Add( new Show
+                    { Movieid = moveid+1, Roomid = 1, Start =  start} );
+                moveid = (moveid + 1) % movies.Count;
+            }
+            return shows;
         }
 
-        public static List<Ticket> GenerateTickets(IEnumerable<Show> shows)
+        public static List<Ticket> GenerateTickets(List<Show> shows)
         {
             return new List<Ticket> {
                 new Ticket { Showid = 1, Rownum = 6, Seatnum = 9, Price = 15.0M },
@@ -77,5 +93,13 @@ namespace API.Cinema.Logic.Populate
             "yyyy-MM-dd HH:mm",
             System.Globalization.CultureInfo.InvariantCulture);
 
+        private static TimeSpan ParseTime(string time) =>
+            TimeSpan.Parse(time);
+
+        private static IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        {
+            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+                yield return day;
+        }
     }
 }
