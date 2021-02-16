@@ -18,5 +18,9 @@ namespace Data.Cinema.Entites
         public int Columns { get; set; }
 
         public virtual ICollection<Show> Shows { get; set; }
+
+        public int TotalSeats()
+            => Rows * Columns;
+
     }
 }
