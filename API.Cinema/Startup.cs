@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Cinema;
+using Data.Cinema.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,7 @@ namespace API.Cinema
         {
             services.AddDbContext<CinemaContext>();
             services.AddScoped<IShowRepository, ShowRepository>();
+            services.AddScoped<IPopulateRepository, PopulateRepository>();
 
             services.AddControllers();
 

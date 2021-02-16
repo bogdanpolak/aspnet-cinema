@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 /* Cinema */
-using Data.Cinema;
 using API.Cinema.DTOs;
 using Data.Cinema.Models;
+using Data.Cinema.Repositories;
 
 namespace API.Cinema.Controllers
 {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Data.Cinema.Models;
 
-namespace Data.Cinema
+namespace Data.Cinema.Repositories
 {
     public interface IShowRepository
     {

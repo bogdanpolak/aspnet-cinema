@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Cinema.Entites;
+using Data.Cinema.Errors;
 using Data.Cinema.Models;
+using Data.Cinema.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Cinema
