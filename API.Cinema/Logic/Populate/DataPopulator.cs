@@ -7,6 +7,7 @@ namespace API.Cinema.Logic.Populate
 {
     public class DataPopulator
     {
+        public static IList<Movie> MovieCollection { get; private set; }
         private static int NextMovieId { get; set; }
         private static int MaxValueMovieId { get; set; }
 
@@ -61,8 +62,8 @@ namespace API.Cinema.Logic.Populate
                     .Select(t => ParseTime(t))
                     .Select(start => new Show
                     {
-                        Movieid = GetMovieId(),
-                        Roomid = 1,
+                        Movie = GetMovie(),
+                        Room = rooms[0],
                         Start = new DateTime(
                         day.Year, day.Month, day.Day,
                         start.Hours, start.Minutes, 0)
@@ -76,8 +77,8 @@ namespace API.Cinema.Logic.Populate
         public static List<Ticket> GenerateTickets(List<Show> shows)
         {
             return new List<Ticket> {
-                new Ticket { Showid = 1, Rownum = 6, Seatnum = 9, Price = 15.0M },
-                new Ticket { Showid = 1, Rownum = 6, Seatnum = 10, Price = 15.0M }
+                new Ticket { Show = shows[0], Rownum = 6, Seatnum = 9, Price = 15.0M },
+                new Ticket { Show = shows[0], Rownum = 6, Seatnum = 10, Price = 15.0M }
             };
             /* Tickets (row, seat, price)
             1	10	15
@@ -97,15 +98,20 @@ namespace API.Cinema.Logic.Populate
 
         private static void InitMovieId(IList<Movie> movies)
         {
-            NextMovieId = 1;
-            MaxValueMovieId = movies.Count;
+            MovieCollection = movies;
+            if (movies.Count == 0) return;
+            NextMovieId = MovieCollection.Min(m => m.Movieid);
         }
 
-        private static int GetMovieId()
+        private static Movie GetMovie()
         {
-            var moveid = NextMovieId;
-            NextMovieId = NextMovieId % MaxValueMovieId + 1;
-            return moveid;
+            var movie = MovieCollection
+                .First(movie => movie.Movieid == NextMovieId);
+            var nextMovie = MovieCollection
+                .FirstOrDefault(movie => movie.Movieid > NextMovieId);
+            if (nextMovie == null)
+                NextMovieId = MovieCollection.Min(m => m.Movieid);
+            return movie;
         }
 
         private static DateTime StartDate(string date) => DateTime.ParseExact(
