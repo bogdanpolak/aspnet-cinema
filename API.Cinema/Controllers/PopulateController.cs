@@ -23,11 +23,11 @@ namespace API.Cinema.Controllers
         [HttpGet]
         public async Task<ActionResult<PopulateResult>> Get()
         {
-            await _populateRepository.ClearDatabase();
             var movies = DataPopulator.GenerateMovies();
             var rooms = DataPopulator.GenerateRooms();
             var shows = DataPopulator.GenerateShows(movies, rooms);
             var tickets = DataPopulator.GenerateTickets(shows);
+            await _populateRepository.ClearDatabase();
             await _populateRepository.AddMovies(movies);
             await _populateRepository.AddRooms(rooms);
             await _populateRepository.AddShows(shows);

@@ -22,13 +22,24 @@ namespace Data.Cinema.Repositories
 
         public async Task ClearDatabase()
         {
-            var tables = new List<string> {
-                "tickets", "shows", "rooms", "movies"
-            };
-            foreach (var tabname in tables)
+            if (_dbContext.Database.IsNpgsql())
             {
-                await _dbContext.Database.ExecuteSqlRawAsync(
-                    $"TRUNCATE TABLE {tabname} RESTART IDENTITY CASCADE");
+                var tables = new List<string> {
+                    "tickets", "shows", "rooms", "movies"
+                };
+                foreach (var tabname in tables)
+                {
+                    await _dbContext.Database.ExecuteSqlRawAsync(
+                        $"TRUNCATE TABLE {tabname} RESTART IDENTITY CASCADE");
+                }
+            }
+            else
+            {
+                _dbContext.Tickets.RemoveRange(_dbContext.Tickets);
+                _dbContext.Shows.RemoveRange(_dbContext.Shows);
+                _dbContext.Rooms.RemoveRange(_dbContext.Rooms);
+                _dbContext.Movies.RemoveRange(_dbContext.Movies);
+                await _dbContext.SaveChangesAsync();
             }
         }
 
