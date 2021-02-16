@@ -7,6 +7,9 @@ namespace API.Cinema.Logic.Populate
 {
     public class DataPopulator
     {
+        private static int NextMovieId { get; set; }
+        private static int MaxValueMovieId { get; set; }
+
         public static List<Movie> GenerateMovies()
         {
             return new List<Movie> {
@@ -48,20 +51,24 @@ namespace API.Cinema.Logic.Populate
             var ago60 = DateTime.Now.AddDays(-30);
             var startDate = new DateTime(ago60.Year, ago60.Month, 1);
             var endDate = DateTime.Now.AddDays(+7);
-            var moveid = 0;
             var shows = new List<Show>();
+            InitMovieId(movies);
             foreach (var day in EachDay(startDate,endDate))
             {
                 var startStr = weekSchedule[day.DayOfWeek];
                 var daySchdulesText = new List<string>(startStr.Split(','));
-                var starts = daySchdulesText
-                    .Select( t => ParseTime(t) )
+                var showsInDay = daySchdulesText
+                    .Select(t => ParseTime(t))
+                    .Select(start => new Show
+                    {
+                        Movieid = GetMovieId(),
+                        Roomid = 1,
+                        Start = new DateTime(
+                        day.Year, day.Month, day.Day,
+                        start.Hours, start.Minutes, 0)
+                    })
                     .ToList();
-                var start = new DateTime(day.Year, day.Month, day.Day,
-                    starts[0].Hours, starts[0].Hours, starts[0].Seconds);
-                shows.Add( new Show
-                    { Movieid = moveid+1, Roomid = 1, Start =  start} );
-                moveid = (moveid + 1) % movies.Count;
+                shows.AddRange( showsInDay );
             }
             return shows;
         }
@@ -86,6 +93,19 @@ namespace API.Cinema.Logic.Populate
             5	16	12.5
             */
 
+        }
+
+        private static void InitMovieId(IList<Movie> movies)
+        {
+            NextMovieId = 1;
+            MaxValueMovieId = movies.Count;
+        }
+
+        private static int GetMovieId()
+        {
+            var moveid = NextMovieId;
+            NextMovieId = NextMovieId % MaxValueMovieId + 1;
+            return moveid;
         }
 
         private static DateTime StartDate(string date) => DateTime.ParseExact(
