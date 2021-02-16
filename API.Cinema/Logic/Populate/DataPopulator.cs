@@ -76,24 +76,38 @@ namespace API.Cinema.Logic.Populate
 
         public static List<Ticket> GenerateTickets(List<Show> shows)
         {
-            return new List<Ticket> {
-                new Ticket { Show = shows[0], Rownum = 6, Seatnum = 9, Price = 15.0M },
-                new Ticket { Show = shows[0], Rownum = 6, Seatnum = 10, Price = 15.0M }
-            };
-            /* Tickets (row, seat, price)
-            1	10	15
-            1	11	15
-            2	1	15
-            2	3	15
-            2	11	12.99
-            5	11	10
-            5	12	17.5
-            5	13	17.5
-            5	14	12.5
-            5	15	12.5
-            5	16	12.5
-            */
+            var tickets = new List<Ticket>();
+            foreach (var show in shows)
+            {
+                var percentToSold = PercentTicketsToSold(show.Start);
+                int toSold = Convert.ToInt32(
+                    Math.Round(show.Room.TotalSeats() * percentToSold));
+                var seats = show.Room.Columns;
+                var ticketsForShow = Enumerable.Range(0, toSold-1)
+                    .Select(idx => new Ticket
+                    {
+                        Show = show,
+                        Rownum = idx/seats+1,
+                        Seatnum = idx%seats+1,
+                        Price = 9.0M
+                    })
+                    .ToList();
+                tickets.AddRange(ticketsForShow);
+            }
+            return tickets;
+        }
 
+        private static double PercentTicketsToSold(DateTime start)
+        {
+            var days = (start - DateTime.Now).TotalDays;
+            if (days < 0)
+                return 0.6D;
+            if (days <= 1)
+                return 0.3D;
+            if (days <= 3)
+                return 0.2D;
+            else
+                return 0.1D;
         }
 
         private static void InitMovieId(IList<Movie> movies)
