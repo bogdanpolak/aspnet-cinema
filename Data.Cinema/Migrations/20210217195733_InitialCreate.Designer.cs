@@ -102,7 +102,7 @@ namespace Data.Cinema.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("ticketid")
-                        .HasDefaultValueSql("nextval('tickets_ticket_id_seq'::regclass)");
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric")

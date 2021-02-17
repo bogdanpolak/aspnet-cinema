@@ -106,9 +106,7 @@ namespace Data.Cinema
             {
                 entity.ToTable("tickets");
 
-                entity.Property(e => e.Ticketid)
-                    .HasColumnName("ticketid")
-                    .HasDefaultValueSql("nextval('tickets_ticket_id_seq'::regclass)");
+                entity.Property(e => e.Ticketid).HasColumnName("ticketid");
 
                 entity.Property(e => e.Price).HasColumnName("price");
 

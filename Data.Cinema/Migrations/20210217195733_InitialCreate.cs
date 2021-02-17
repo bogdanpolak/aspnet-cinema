@@ -67,7 +67,8 @@ namespace Data.Cinema.Migrations
                 name: "tickets",
                 columns: table => new
                 {
-                    ticketid = table.Column<int>(type: "integer", nullable: false, defaultValueSql: "nextval('tickets_ticket_id_seq'::regclass)"),
+                    ticketid = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     showid = table.Column<int>(type: "integer", nullable: false),
                     rownum = table.Column<int>(type: "integer", nullable: false),
                     seatnum = table.Column<int>(type: "integer", nullable: false),
