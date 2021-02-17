@@ -34,12 +34,13 @@ namespace Data.Cinema
                 // see https://go.microsoft.com/fwlink/?linkid=2131148.
                 // For more guidance on storing connection strings,
                 // see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseInMemoryDatabase("CinemaDatabase");
+
                 /*
+                optionsBuilder.UseInMemoryDatabase("CinemaDatabase");
+                */
                 optionsBuilder
                     .UseLazyLoadingProxies()
                     .UseNpgsql("Server=localhost;Port=5432;Database=cinema;");
-                */
             }
         }
 
