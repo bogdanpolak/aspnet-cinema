@@ -14,5 +14,6 @@
     <Folder Include="Entites\" />
     <Folder Include="Repositories\" />
     <Folder Include="Errors\" />
+    <Folder Include="Migrations\SqlScripts\" />
   </ItemGroup>
 </Project>
