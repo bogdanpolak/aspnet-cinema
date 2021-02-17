@@ -24,3 +24,14 @@
       --project "Data.Cinema/" 
       --startup-project "API.Cinema/"
    ```
+1. Create Initial migration (CLI)
+   - add "Microsoft.EntityFrameworkCore.Design" to API.Cinema (statup project)
+   - cd to Data.Cinema project folder
+   - execute following command:
+   ```
+   dotnet ef migrations add InitialCreate -s ../API.Cinema
+   ```
+1. Generate SQL daabse script (CLI)
+   ```
+   dotnet ef migrations script -s ../API.Cinema
+   ```
