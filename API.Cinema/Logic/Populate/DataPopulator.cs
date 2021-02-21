@@ -8,7 +8,7 @@ namespace API.Cinema.Logic.Populate
     public class DataPopulator
     {
         public static IList<Movie> MovieCollection { get; private set; }
-        private static int NextMovieId { get; set; }
+        private static Movie NextMovie { get; set; }
 
         public static List<Movie> GenerateMovies()
         {
@@ -113,17 +113,15 @@ namespace API.Cinema.Logic.Populate
         {
             MovieCollection = movies;
             if (movies.Count == 0) return;
-            NextMovieId = MovieCollection.Min(m => m.Movieid);
+            NextMovie = MovieCollection[0];
         }
 
         private static Movie GetMovie()
         {
-            var movie = MovieCollection
-                .First(movie => movie.Movieid == NextMovieId);
-            var nextMovie = MovieCollection
-                .FirstOrDefault(movie => movie.Movieid > NextMovieId);
-            if (nextMovie == null)
-                NextMovieId = MovieCollection.Min(m => m.Movieid);
+            var movie = NextMovie;
+            var idx = MovieCollection.IndexOf(NextMovie);
+            var nextIdx = (idx + 1 < MovieCollection.Count) ? idx + 1 : 0;
+            NextMovie = MovieCollection[nextIdx]; 
             return movie;
         }
 
