@@ -49,6 +49,7 @@ namespace Data.Cinema
                     Movieid = show.Movieid,
                     Roomid = show.Roomid,
                     Movie = show.Movie.Title,
+                    Rate = show.Movie.Rate,
                     Room = show.Room.Name,
                     Start = show.Start,
                     Seats = show.Room.Columns * show.Room.Rows,
