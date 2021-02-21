@@ -25,7 +25,7 @@
       --startup-project "API.Cinema/"
    ```
 
-## Migrations
+## Migrations (initial)
 
 1. Add `Microsoft.EntityFrameworkCore.Design` to API.Cinema (statup) project
    ```
@@ -41,3 +41,16 @@
    ```
    dotnet ef migrations script -s ../API.Cinema
    ```
+
+## Migrations (upgrads)
+
+1. Add new object structures (classes / properties) for entitites
+1. Add migration
+   ```
+   dotnet ef migrations add AddMovieLauchDate -s ../API.Cinema 
+   ```
+1. Upgrade database
+   ```
+   adotnet ef database update -s ../API.Cinema
+   ```
+    
