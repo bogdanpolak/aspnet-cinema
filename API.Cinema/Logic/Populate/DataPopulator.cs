@@ -8,27 +8,31 @@ namespace API.Cinema.Logic.Populate
     public class DataPopulator
     {
         public static IList<Movie> MovieCollection { get; private set; }
-        private static int NextMovieId { get; set; }
-        private static int MaxValueMovieId { get; set; }
+        private static Movie NextMovie { get; set; }
 
         public static List<Movie> GenerateMovies()
         {
             return new List<Movie> {
-                new Movie{ Title = "Jumanji: Level One" },
-                new Movie{ Title = "Supernova" },
-                new Movie{ Title = "Little Fish" },
-                new Movie{ Title = "The Mauritanian" },
-                new Movie{ Title = "Tom and Jerry" },
-                new Movie{ Title = "Godzilla vs.Kong" },
-                new Movie{ Title = "Peter Rabbit 2: The Runaway" },
-                new Movie{ Title = "A Quiet Place Part II" },
-                new Movie{ Title = "Black Widow" },
-                new Movie{ Title = "Ghostbusters: Afterlife" },
-                new Movie{ Title = "Top Gun: Maverick" },
-                new Movie{ Title = "Dune" },
-                new Movie{ Title = "Mission: Impossible 7" },
-                new Movie{ Title = "The Matrix 4" },
-                new Movie{ Title = "Sherlock Holmes 3" }
+                new Movie{ LaunchDate = Launch(0), Rate = 1, Title = "Freaky" },
+                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "The Croods: A New Age" },
+                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "All My Life" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Half Brothers" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Pinocchio" },
+                new Movie{ LaunchDate = Launch(3*7), Rate = 1, Title = "Jumanji: Level One" },
+                new Movie{ LaunchDate = Launch(4*7), Rate = 2, Title = "Supernova" },
+                new Movie{ LaunchDate = Launch(4*7), Rate = 3, Title = "Little Fish" },
+                new Movie{ LaunchDate = Launch(5*7), Rate = 2, Title = "The Mauritanian" },
+                new Movie{ LaunchDate = Launch(6*7), Rate = 4, Title = "Tom and Jerry" },
+                new Movie{ LaunchDate = Launch(6*7), Rate = 3, Title = "Godzilla vs.Kong" },
+                new Movie{ LaunchDate = Launch(7*7), Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
+                new Movie{ LaunchDate = Launch(8*7), Rate = 1, Title = "A Quiet Place Part II" },
+                new Movie{ LaunchDate = Launch(8*7), Rate = 5, Title = "Black Widow" },
+                new Movie{ LaunchDate = Launch(9*7), Rate = 2, Title = "Ghostbusters: Afterlife" },
+                new Movie{ LaunchDate = Launch(10*7), Rate = 4, Title = "Top Gun: Maverick" },
+                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Dune" },
+                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Mission: Impossible 7" },
+                new Movie{ LaunchDate = Launch(12*7), Rate = 5, Title = "The Matrix 4" },
+                new Movie{ LaunchDate = Launch(12*7), Rate = 3, Title = "Sherlock Holmes 3" }
             };
         }
 
@@ -114,17 +118,15 @@ namespace API.Cinema.Logic.Populate
         {
             MovieCollection = movies;
             if (movies.Count == 0) return;
-            NextMovieId = MovieCollection.Min(m => m.Movieid);
+            NextMovie = MovieCollection[0];
         }
 
         private static Movie GetMovie()
         {
-            var movie = MovieCollection
-                .First(movie => movie.Movieid == NextMovieId);
-            var nextMovie = MovieCollection
-                .FirstOrDefault(movie => movie.Movieid > NextMovieId);
-            if (nextMovie == null)
-                NextMovieId = MovieCollection.Min(m => m.Movieid);
+            var movie = NextMovie;
+            var idx = MovieCollection.IndexOf(NextMovie);
+            var nextIdx = (idx + 1 < MovieCollection.Count) ? idx + 1 : 0;
+            NextMovie = MovieCollection[nextIdx]; 
             return movie;
         }
 
@@ -132,6 +134,9 @@ namespace API.Cinema.Logic.Populate
             date,
             "yyyy-MM-dd HH:mm",
             System.Globalization.CultureInfo.InvariantCulture);
+
+        private static DateTime Launch(int launchOffset)
+            => DateTime.Now.Date.AddDays(launchOffset - 8*7);
 
         private static TimeSpan ParseTime(string time) =>
             TimeSpan.Parse(time);

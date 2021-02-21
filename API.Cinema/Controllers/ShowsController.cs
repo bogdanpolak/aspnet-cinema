@@ -28,6 +28,8 @@ namespace API.Cinema.Controllers
                 {
                     ShowId = show.Showid,
                     Movie = show.Movie,
+                    Rate = show.Rate,
+                    LaunchDate = show.LaunchDate,
                     Room = show.Room,
                     Start = show.Start,
                     Seats = show.Seats,

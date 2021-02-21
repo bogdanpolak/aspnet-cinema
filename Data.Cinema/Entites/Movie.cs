@@ -14,6 +14,8 @@ namespace Data.Cinema.Entites
 
         public int Movieid { get; set; }
         public string Title { get; set; }
+        public int Rate { get; set; }
+        public DateTime LaunchDate { get; set; }
 
         public virtual ICollection<Show> Shows { get; set; }
     }
