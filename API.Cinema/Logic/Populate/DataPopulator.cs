@@ -9,26 +9,25 @@ namespace API.Cinema.Logic.Populate
     {
         public static IList<Movie> MovieCollection { get; private set; }
         private static int NextMovieId { get; set; }
-        private static int MaxValueMovieId { get; set; }
 
         public static List<Movie> GenerateMovies()
         {
             return new List<Movie> {
-                new Movie{ Title = "Jumanji: Level One" },
-                new Movie{ Title = "Supernova" },
-                new Movie{ Title = "Little Fish" },
-                new Movie{ Title = "The Mauritanian" },
-                new Movie{ Title = "Tom and Jerry" },
-                new Movie{ Title = "Godzilla vs.Kong" },
-                new Movie{ Title = "Peter Rabbit 2: The Runaway" },
-                new Movie{ Title = "A Quiet Place Part II" },
-                new Movie{ Title = "Black Widow" },
-                new Movie{ Title = "Ghostbusters: Afterlife" },
-                new Movie{ Title = "Top Gun: Maverick" },
-                new Movie{ Title = "Dune" },
-                new Movie{ Title = "Mission: Impossible 7" },
-                new Movie{ Title = "The Matrix 4" },
-                new Movie{ Title = "Sherlock Holmes 3" }
+                new Movie{ Rate = 1, Title = "Jumanji: Level One" },
+                new Movie{ Rate = 2, Title = "Supernova" },
+                new Movie{ Rate = 3, Title = "Little Fish" },
+                new Movie{ Rate = 2, Title = "The Mauritanian" },
+                new Movie{ Rate = 4, Title = "Tom and Jerry" },
+                new Movie{ Rate = 3, Title = "Godzilla vs.Kong" },
+                new Movie{ Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
+                new Movie{ Rate = 1, Title = "A Quiet Place Part II" },
+                new Movie{ Rate = 5, Title = "Black Widow" },
+                new Movie{ Rate = 2, Title = "Ghostbusters: Afterlife" },
+                new Movie{ Rate = 4, Title = "Top Gun: Maverick" },
+                new Movie{ Rate = 5, Title = "Dune" },
+                new Movie{ Rate = 5, Title = "Mission: Impossible 7" },
+                new Movie{ Rate = 5, Title = "The Matrix 4" },
+                new Movie{ Rate = 3, Title = "Sherlock Holmes 3" }
             };
         }
 
