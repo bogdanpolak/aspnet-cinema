@@ -13,21 +13,26 @@ namespace API.Cinema.Logic.Populate
         public static List<Movie> GenerateMovies()
         {
             return new List<Movie> {
-                new Movie{ Rate = 1, Title = "Jumanji: Level One" },
-                new Movie{ Rate = 2, Title = "Supernova" },
-                new Movie{ Rate = 3, Title = "Little Fish" },
-                new Movie{ Rate = 2, Title = "The Mauritanian" },
-                new Movie{ Rate = 4, Title = "Tom and Jerry" },
-                new Movie{ Rate = 3, Title = "Godzilla vs.Kong" },
-                new Movie{ Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
-                new Movie{ Rate = 1, Title = "A Quiet Place Part II" },
-                new Movie{ Rate = 5, Title = "Black Widow" },
-                new Movie{ Rate = 2, Title = "Ghostbusters: Afterlife" },
-                new Movie{ Rate = 4, Title = "Top Gun: Maverick" },
-                new Movie{ Rate = 5, Title = "Dune" },
-                new Movie{ Rate = 5, Title = "Mission: Impossible 7" },
-                new Movie{ Rate = 5, Title = "The Matrix 4" },
-                new Movie{ Rate = 3, Title = "Sherlock Holmes 3" }
+                new Movie{ LaunchDate = Launch(0), Rate = 1, Title = "Freaky" },
+                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "The Croods: A New Age" },
+                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "All My Life" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Half Brothers" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Pinocchio" },
+                new Movie{ LaunchDate = Launch(3*7), Rate = 1, Title = "Jumanji: Level One" },
+                new Movie{ LaunchDate = Launch(4*7), Rate = 2, Title = "Supernova" },
+                new Movie{ LaunchDate = Launch(4*7), Rate = 3, Title = "Little Fish" },
+                new Movie{ LaunchDate = Launch(5*7), Rate = 2, Title = "The Mauritanian" },
+                new Movie{ LaunchDate = Launch(6*7), Rate = 4, Title = "Tom and Jerry" },
+                new Movie{ LaunchDate = Launch(6*7), Rate = 3, Title = "Godzilla vs.Kong" },
+                new Movie{ LaunchDate = Launch(7*7), Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
+                new Movie{ LaunchDate = Launch(8*7), Rate = 1, Title = "A Quiet Place Part II" },
+                new Movie{ LaunchDate = Launch(8*7), Rate = 5, Title = "Black Widow" },
+                new Movie{ LaunchDate = Launch(9*7), Rate = 2, Title = "Ghostbusters: Afterlife" },
+                new Movie{ LaunchDate = Launch(10*7), Rate = 4, Title = "Top Gun: Maverick" },
+                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Dune" },
+                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Mission: Impossible 7" },
+                new Movie{ LaunchDate = Launch(12*7), Rate = 5, Title = "The Matrix 4" },
+                new Movie{ LaunchDate = Launch(12*7), Rate = 3, Title = "Sherlock Holmes 3" }
             };
         }
 
@@ -129,6 +134,9 @@ namespace API.Cinema.Logic.Populate
             date,
             "yyyy-MM-dd HH:mm",
             System.Globalization.CultureInfo.InvariantCulture);
+
+        private static DateTime Launch(int launchOffset)
+            => DateTime.Now.Date.AddDays(launchOffset - 8*7);
 
         private static TimeSpan ParseTime(string time) =>
             TimeSpan.Parse(time);
