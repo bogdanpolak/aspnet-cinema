@@ -47,8 +47,8 @@ namespace API.Cinema.InitializeDatabase
                         context.Rooms.AddRange(rooms);
                         context.Shows.AddRange(shows);
                         context.Tickets.AddRange(tickets);
+                        context.SaveChanges();
                     }
-                    context.SaveChanges();
                 }
             }
         }
