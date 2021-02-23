@@ -13,11 +13,11 @@ namespace API.Cinema.InitializeDatabase
         public static List<Movie> GenerateMovies()
         {
             return new List<Movie> {
-                new Movie{ LaunchDate = Launch(0), Rate = 1, Title = "Freaky" },
+                new Movie{ LaunchDate = Launch(0), Rate = 3, Title = "Freaky" },
                 new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "The Croods: A New Age" },
-                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "All My Life" },
-                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Half Brothers" },
-                new Movie{ LaunchDate = Launch(2*7), Rate = 1, Title = "Pinocchio" },
+                new Movie{ LaunchDate = Launch(1*7), Rate = 2, Title = "All My Life" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 3, Title = "Half Brothers" },
+                new Movie{ LaunchDate = Launch(2*7), Rate = 4, Title = "Pinocchio" },
                 new Movie{ LaunchDate = Launch(3*7), Rate = 1, Title = "Jumanji: Level One" },
                 new Movie{ LaunchDate = Launch(4*7), Rate = 2, Title = "Supernova" },
                 new Movie{ LaunchDate = Launch(4*7), Rate = 3, Title = "Little Fish" },
@@ -136,7 +136,7 @@ namespace API.Cinema.InitializeDatabase
             System.Globalization.CultureInfo.InvariantCulture);
 
         private static DateTime Launch(int launchOffset)
-            => DateTime.Now.Date.AddDays(launchOffset - 8*7);
+            => DateTime.Now.Date.AddDays(launchOffset - 16*7);
 
         private static TimeSpan ParseTime(string time) =>
             TimeSpan.Parse(time);
