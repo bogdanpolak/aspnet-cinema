@@ -5,6 +5,7 @@
   </PropertyGroup>
 
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom' " />
   <ItemGroup>
     <ProjectReference Include="..\Data.Cinema\Data.Cinema.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
