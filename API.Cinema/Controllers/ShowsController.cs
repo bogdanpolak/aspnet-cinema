@@ -64,6 +64,7 @@ namespace API.Cinema.Controllers
             var showTickets = await _showRepository.GetShowTickets(showId);
             var tickets = BuildRowSeatsArray(showTickets);
             return new ShowTicketsResult {
+                ShowId = show.Showid,
                 Movie = show.Movie,
                 Room = show.Room,
                 Start = show.Start,
