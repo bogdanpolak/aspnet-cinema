@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Cinema.Entites;
 
-namespace API.Cinema.Logic.Populate
+namespace API.Cinema.InitializeDatabase
 {
     public class DataPopulator
     {

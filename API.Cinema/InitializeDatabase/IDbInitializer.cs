@@ -1,4 +1,4 @@
-﻿namespace API.Cinema.SeedData
+﻿namespace API.Cinema.InitializeDatabase
 {
     public interface IDbInitializer
     {

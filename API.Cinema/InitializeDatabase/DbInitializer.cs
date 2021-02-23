@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using API.Cinema.Logic.Populate;
 using Data.Cinema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace API.Cinema.SeedData
+namespace API.Cinema.InitializeDatabase
 {
     public class DbInitializer : IDbInitializer
     {

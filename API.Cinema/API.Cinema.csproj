@@ -19,8 +19,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Logic\" />
-    <Folder Include="Logic\Populate\" />
-    <Folder Include="SeedData\" />
+    <Folder Include="InitializeDatabase\" />
   </ItemGroup>
 </Project>

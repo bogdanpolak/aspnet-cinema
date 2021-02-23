@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using API.Cinema.SeedData;
+using API.Cinema.InitializeDatabase;
 using Data.Cinema;
 using Data.Cinema.Repositories;
 using Microsoft.AspNetCore.Builder;
