@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using API.Cinema.SeedData;
 using Data.Cinema;
 using Data.Cinema.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +28,7 @@ namespace API.Cinema
         {
             services.AddDbContext<CinemaContext>();
             services.AddScoped<IShowRepository, ShowRepository>();
-            services.AddScoped<IPopulateRepository, PopulateRepository>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddControllers();
 
@@ -44,6 +45,7 @@ namespace API.Cinema
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                MigrationUgradeAndSeedData(app);
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -66,6 +68,17 @@ namespace API.Cinema
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void MigrationUgradeAndSeedData(IApplicationBuilder app)
+        {
+            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
+                dbInitializer.Initialize();
+                dbInitializer.SeedData();
+            }
         }
     }
 }
