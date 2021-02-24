@@ -12,34 +12,37 @@ namespace API.Cinema.InitializeDatabase
 
         public static List<Movie> GenerateMovies()
         {
-            return new List<Movie> {
-                new Movie{ LaunchDate = Launch(0), Rate = 3, Title = "Freaky" },
-                new Movie{ LaunchDate = Launch(1*7), Rate = 1, Title = "The Croods: A New Age" },
-                new Movie{ LaunchDate = Launch(1*7), Rate = 2, Title = "All My Life" },
-                new Movie{ LaunchDate = Launch(2*7), Rate = 3, Title = "Half Brothers" },
-                new Movie{ LaunchDate = Launch(2*7), Rate = 4, Title = "Pinocchio" },
-                new Movie{ LaunchDate = Launch(3*7), Rate = 1, Title = "Jumanji: Level One" },
-                new Movie{ LaunchDate = Launch(4*7), Rate = 2, Title = "Supernova" },
-                new Movie{ LaunchDate = Launch(4*7), Rate = 3, Title = "Little Fish" },
-                new Movie{ LaunchDate = Launch(5*7), Rate = 2, Title = "The Mauritanian" },
-                new Movie{ LaunchDate = Launch(6*7), Rate = 4, Title = "Tom and Jerry" },
-                new Movie{ LaunchDate = Launch(6*7), Rate = 3, Title = "Godzilla vs.Kong" },
-                new Movie{ LaunchDate = Launch(7*7), Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
-                new Movie{ LaunchDate = Launch(8*7), Rate = 1, Title = "A Quiet Place Part II" },
-                new Movie{ LaunchDate = Launch(8*7), Rate = 5, Title = "Black Widow" },
-                new Movie{ LaunchDate = Launch(9*7), Rate = 2, Title = "Ghostbusters: Afterlife" },
-                new Movie{ LaunchDate = Launch(10*7), Rate = 4, Title = "Top Gun: Maverick" },
-                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Dune" },
-                new Movie{ LaunchDate = Launch(11*7), Rate = 5, Title = "Mission: Impossible 7" },
-                new Movie{ LaunchDate = Launch(12*7), Rate = 5, Title = "The Matrix 4" },
-                new Movie{ LaunchDate = Launch(12*7), Rate = 3, Title = "Sherlock Holmes 3" }
+            var movies = new List<Movie> {
+                new Movie{ LaunchDate = Launch(0*7), Length = 100, IMDB = 7.2, Rate = 5, Title = "A Quiet Place Part II" },
+                new Movie{ LaunchDate = Launch(0*7), Length = 103, IMDB = 6.3, Rate = 3, Title = "Freaky" },
+                new Movie{ LaunchDate = Launch(1*7), Length = 95, IMDB = 7.0, Rate = 4, Title = "The Croods: A New Age" },
+                new Movie{ LaunchDate = Launch(1*7), Length = 93, IMDB = 6.2, Rate = 1, Title = "All My Life" },
+                new Movie{ LaunchDate = Launch(2*7), Length = 96, IMDB = 5.9, Rate = 1, Title = "Half Brothers" },
+                new Movie{ LaunchDate = Launch(2*7), Length = 125, IMDB = 6.2, Rate = 2, Title = "Pinocchio" },
+                new Movie{ LaunchDate = Launch(3*7), Length = 103, IMDB = 6.6, Rate = 4, Title = "Jumanji: Level One" },
+                new Movie{ LaunchDate = Launch(4*7), Length = 95, IMDB = 6.7, Rate = 3, Title = "Supernova" },
+                new Movie{ LaunchDate = Launch(4*7), Length = 107, IMDB = 6.9, Rate = 3, Title = "Little Fish" },
+                new Movie{ LaunchDate = Launch(5*7), Length = 129, IMDB = 7.1, Rate = 2, Title = "The Mauritanian" },
+                new Movie{ LaunchDate = Launch(6*7), Length = 101, IMDB = 6.6, Rate = 4, Title = "Tom and Jerry" },
+                new Movie{ LaunchDate = Launch(6*7), Length = 105, IMDB = 6.9, Rate = 3, Title = "Godzilla vs.Kong" },
+                new Movie{ LaunchDate = Launch(7*7), Length = 93, IMDB = 7.1, Rate = 3, Title = "Peter Rabbit 2: The Runaway" },
+                new Movie{ LaunchDate = Launch(8*7), Length = 133, IMDB = 7.2, Rate = 5, Title = "Black Widow" },
+                new Movie{ LaunchDate = Launch(9*7), Length = 94, IMDB = 6.1, Rate = 2, Title = "Ghostbusters: Afterlife" },
+                new Movie{ LaunchDate = Launch(10*7), Length = 89, IMDB = 7.2, Rate = 4, Title = "Top Gun: Maverick" },
+                new Movie{ LaunchDate = Launch(11*7), Length = 98, IMDB = 7.9, Rate = 5, Title = "Dune" },
+                new Movie{ LaunchDate = Launch(11*7), Length = 102, IMDB = 6.7, Rate = 5, Title = "Mission: Impossible 7" },
+                new Movie{ LaunchDate = Launch(12*7), Length = 117, IMDB = 7.8, Rate = 5, Title = "The Matrix 4" },
+                new Movie{ LaunchDate = Launch(12*7), Length = 103, IMDB = 6.2, Rate = 3, Title = "Sherlock Holmes 3" }
             };
+            for (int idx = 0; idx < movies.Count; idx++)
+                movies[idx].Movieid = idx + 1;
+            return movies;
         }
 
         public static List<Room> GenerateRooms() => new List<Room>
             {
-                new Room { Name = "Turquouse Room", Rows = 8, Columns = 14 },
-                new Room { Name = "Garent Room", Rows = 22, Columns = 16 },
+                new Room { Roomid = 1, Name = "Turquouse Room", Rows = 8, Columns = 14 },
+                new Room { Roomid = 2, Name = "Garent Room", Rows = 22, Columns = 16 },
             };
 
         public static List<Show> GenerateShows(IList<Movie> movies, IList<Room> rooms)
@@ -60,6 +63,7 @@ namespace API.Cinema.InitializeDatabase
             InitMovieId(movies);
             foreach (var day in EachDay(startDate,endDate))
             {
+                
                 var startStr = weekSchedule[day.DayOfWeek];
                 var daySchdulesText = new List<string>(startStr.Split(','));
                 var showsInDay = daySchdulesText
@@ -75,6 +79,8 @@ namespace API.Cinema.InitializeDatabase
                     .ToList();
                 shows.AddRange( showsInDay );
             }
+            for (int idx = 0; idx < shows.Count; idx++)
+                shows[idx].Showid = idx + 1;
             return shows;
         }
 
