@@ -27,14 +27,20 @@ namespace API.Cinema.Controllers
                 .Select(show => new ShowResult
                 {
                     ShowId = show.Showid,
-                    Movie = show.Movie,
-                    Rate = show.Rate,
-                    LaunchDate = show.LaunchDate,
-                    Room = show.Room,
                     Start = show.Start,
-                    Seats = show.Seats,
-                    Sold = show.Sold,
-                    Total = show.Total
+                    Total = show.Total,
+                    Movie = new ShowResult.MovieDetails
+                    {
+                        Name = show.Movie,
+                        Rate = show.Rate,
+                        Launch = show.LaunchDate
+                    },
+                    Room = new ShowResult.RoomDetails
+                    {
+                        Name = show.Room,
+                        Seats = show.Seats,
+                        Sold = show.Sold
+                    },
                 })
                 .ToArray();
         }

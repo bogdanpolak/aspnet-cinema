@@ -2,12 +2,19 @@
 
 namespace Data.Cinema.Migrations
 {
-    public partial class AddMovieRate : Migration
+    public partial class AddMovieLenght : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<double>(
+                name: "IMDB",
+                table: "movies",
+                type: "double precision",
+                nullable: false,
+                defaultValue: 0.0);
+
             migrationBuilder.AddColumn<int>(
-                name: "Rate",
+                name: "Length",
                 table: "movies",
                 type: "integer",
                 nullable: false,
@@ -17,7 +24,11 @@ namespace Data.Cinema.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Rate",
+                name: "IMDB",
+                table: "movies");
+
+            migrationBuilder.DropColumn(
+                name: "Length",
                 table: "movies");
         }
     }

@@ -39,14 +39,12 @@ namespace API.Cinema.InitializeDatabase
                 {
                     if (!context.Movies.Any())
                     {
-                        var movies = DataPopulator.GenerateMovies();
-                        var rooms = DataPopulator.GenerateRooms();
-                        var shows = DataPopulator.GenerateShows(movies, rooms);
-                        var tickets = DataPopulator.GenerateTickets(shows);
-                        context.Movies.AddRange(movies);
-                        context.Rooms.AddRange(rooms);
-                        context.Shows.AddRange(shows);
-                        context.Tickets.AddRange(tickets);
+                        var dataPopulator = new DataPopulator();
+                        dataPopulator.GenerateData();
+                        context.Movies.AddRange(dataPopulator.Movies);
+                        context.Rooms.AddRange(dataPopulator.Rooms);
+                        context.Shows.AddRange(dataPopulator.Shows);
+                        context.Tickets.AddRange(dataPopulator.Tickets);
                         context.SaveChanges();
                     }
                 }
