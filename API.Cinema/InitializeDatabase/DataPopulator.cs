@@ -7,12 +7,26 @@ namespace API.Cinema.InitializeDatabase
 {
     public class DataPopulator
     {
-        public static IList<Movie> MovieCollection { get; private set; }
-        private static Movie NextMovie { get; set; }
+        const int CleaningTime = 35;
 
-        public static List<Movie> GenerateMovies()
+        public List<Movie> Movies { get; set; }
+        public List<Room> Rooms { get; set; }
+        public List<Show> Shows { get; set; }
+        public List<Ticket> Tickets { get; set; }
+
+        private int CurrentMovieIdx { get; set; }
+
+        internal void GenerateData()
         {
-            var movies = new List<Movie> {
+            GenerateMovies();
+            GenerateRooms();
+            GenerateShows();
+            GenerateTickets();
+        }
+
+        private void GenerateMovies()
+        {
+            Movies = new List<Movie> {
                 new Movie{ LaunchDate = Launch(0*7), Length = 100, IMDB = 7.2, Rate = 5, Title = "A Quiet Place Part II" },
                 new Movie{ LaunchDate = Launch(0*7), Length = 103, IMDB = 6.3, Rate = 3, Title = "Freaky" },
                 new Movie{ LaunchDate = Launch(1*7), Length = 95, IMDB = 7.0, Rate = 4, Title = "The Croods: A New Age" },
@@ -34,60 +48,73 @@ namespace API.Cinema.InitializeDatabase
                 new Movie{ LaunchDate = Launch(12*7), Length = 117, IMDB = 7.8, Rate = 5, Title = "The Matrix 4" },
                 new Movie{ LaunchDate = Launch(12*7), Length = 103, IMDB = 6.2, Rate = 3, Title = "Sherlock Holmes 3" }
             };
-            for (int idx = 0; idx < movies.Count; idx++)
-                movies[idx].Movieid = idx + 1;
-            return movies;
+            for (int idx = 0; idx < Movies.Count; idx++)
+                Movies[idx].Movieid = idx + 1;
         }
 
-        public static List<Room> GenerateRooms() => new List<Room>
+        private void GenerateRooms()
+        {
+            Rooms = new List<Room>
             {
                 new Room { Roomid = 1, Name = "Turquouse Room", Rows = 8, Columns = 14 },
                 new Room { Roomid = 2, Name = "Garent Room", Rows = 22, Columns = 16 },
             };
+        }
 
-        public static List<Show> GenerateShows(IList<Movie> movies, IList<Room> rooms)
+        private void GenerateShows()
         {
-            var weekSchedule = new Dictionary<DayOfWeek, string>() {
-                { DayOfWeek.Monday, "18:30" },
-                { DayOfWeek.Tuesday, "18:30" },
-                { DayOfWeek.Wednesday, "18:00,20:30" },
-                { DayOfWeek.Thursday, "18:00,20:30" },
-                { DayOfWeek.Friday, "18:00,20:30" },
-                { DayOfWeek.Saturday, "13:30,16:00,18:30,21:00" },
-                { DayOfWeek.Sunday, "12:00,14:30,17:00,19:30" },
-            };
+            Shows = new List<Show>();
             var ago60 = DateTime.Now.AddDays(-30);
             var startDate = new DateTime(ago60.Year, ago60.Month, 1);
             var endDate = DateTime.Now.AddDays(+7);
-            var shows = new List<Show>();
-            InitMovieId(movies);
+            CurrentMovieIdx = 0;
             foreach (var day in EachDay(startDate,endDate))
             {
-                
-                var startStr = weekSchedule[day.DayOfWeek];
-                var daySchdulesText = new List<string>(startStr.Split(','));
-                var showsInDay = daySchdulesText
-                    .Select(t => ParseTime(t))
-                    .Select(start => new Show
-                    {
-                        Movie = GetMovie(),
-                        Room = rooms[0],
-                        Start = new DateTime(
-                        day.Year, day.Month, day.Day,
-                        start.Hours, start.Minutes, 0)
-                    })
-                    .ToList();
-                shows.AddRange( showsInDay );
+                var showsInADay = GenerateOneDayShows(day);
+                Shows.AddRange( showsInADay );
             }
-            for (int idx = 0; idx < shows.Count; idx++)
-                shows[idx].Showid = idx + 1;
-            return shows;
+            for (int idx = 0; idx < Shows.Count; idx++)
+                Shows[idx].Showid = idx + 1;
         }
 
-        public static List<Ticket> GenerateTickets(List<Show> shows)
+        private IEnumerable<Show> GenerateOneDayShows(DateTime day)
         {
-            var tickets = new List<Ticket>();
-            foreach (var show in shows)
+            var weekSchedule = new Dictionary<DayOfWeek, (TimeSpan, TimeSpan)>() {
+                { DayOfWeek.Monday, (ParseTime("18:30"), ParseTime("19:30")) },
+                { DayOfWeek.Tuesday, (ParseTime("18:30"), ParseTime("19:30")) },
+                { DayOfWeek.Wednesday, (ParseTime("18:30"), ParseTime("20:30")) },
+                { DayOfWeek.Thursday, (ParseTime("18:30"), ParseTime("20:30")) },
+                { DayOfWeek.Friday, (ParseTime("17:30"), ParseTime("21:00")) },
+                { DayOfWeek.Saturday, (ParseTime("12:30"), ParseTime("21:30")) },
+                { DayOfWeek.Sunday, (ParseTime("11:30"), ParseTime("20:30")) },
+            };
+            var (firstShow, lastShow) = weekSchedule[day.DayOfWeek];
+            var starts = new List<TimeSpan>();
+            Rooms.ForEach(room => starts.Add(firstShow));
+            var minTime = starts.Min();
+            var showsInADay = new List<Show>();
+            while (minTime<lastShow)
+            {
+                var roomidx = starts.IndexOf(minTime);
+                var movie = Movies[CurrentMovieIdx];
+                CurrentMovieIdx = (CurrentMovieIdx + 1 < Movies.Count) ? CurrentMovieIdx + 1 : 0;
+                showsInADay.Add(new Show
+                {
+                    Movie = movie,
+                    Room = Rooms[roomidx],
+                    Start = day + minTime
+                });
+                var fullLength = (int)Math.Ceiling((double)(movie.Length + CleaningTime) / 10) * 10;
+                starts[roomidx] = minTime + new TimeSpan(0, fullLength, 0);
+                minTime = starts.Min();
+            }
+            return showsInADay;
+        }
+
+        private void GenerateTickets()
+        {
+            Tickets = new List<Ticket>();
+            foreach (var show in Shows)
             {
                 var percentToSold = PercentTicketsToSold(show.Start);
                 int toSold = Convert.ToInt32(
@@ -102,9 +129,8 @@ namespace API.Cinema.InitializeDatabase
                         Price = 9.0M
                     })
                     .ToList();
-                tickets.AddRange(ticketsForShow);
+                Tickets.AddRange(ticketsForShow);
             }
-            return tickets;
         }
 
         private static double PercentTicketsToSold(DateTime start)
@@ -120,21 +146,6 @@ namespace API.Cinema.InitializeDatabase
                 return 0.1D;
         }
 
-        private static void InitMovieId(IList<Movie> movies)
-        {
-            MovieCollection = movies;
-            if (movies.Count == 0) return;
-            NextMovie = MovieCollection[0];
-        }
-
-        private static Movie GetMovie()
-        {
-            var movie = NextMovie;
-            var idx = MovieCollection.IndexOf(NextMovie);
-            var nextIdx = (idx + 1 < MovieCollection.Count) ? idx + 1 : 0;
-            NextMovie = MovieCollection[nextIdx]; 
-            return movie;
-        }
 
         private static DateTime StartDate(string date) => DateTime.ParseExact(
             date,
